@@ -1,16 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-
-interface Movie {
-    id: number;
-    title: string;
-    backdrop_path: string;
-    poster_path: string;
-    overview: string;
-    release_date: string;
-    vote_average: number;
-    vote_count: number;
-}
+import { Movie } from '@/types/types';
 
 export default function MoviesListPreview(
     { movies, title }: Readonly<{ movies: Movie[], title: string }>
@@ -29,7 +19,7 @@ export default function MoviesListPreview(
                                 height={750}
                                 className="w-full h-auto"
                             />
-                            <div className="absolute h-1/2 w-full bottom-0 bg-black bg-opacity-50 opacity-0 translate-y-full group-hover:opacity-100 group-hover:translate-y-0 flex flex-col justify-end p-4 transition-all duration-500">
+                            <div className="absolute h-full w-full bottom-0 bg-black bg-opacity-50 opacity-0 translate-y-full group-hover:opacity-100 group-hover:translate-y-0 flex flex-col justify-end p-4 transition-all duration-500">
                                 <h2 className="text-lg font-semibold">{movie.title}</h2>
                                 <p>{new Date(movie.release_date).toLocaleDateString('fr-FR')}</p>
                                 <div className="flex items-center mt-2">

@@ -2,25 +2,10 @@
 
 import { useEffect, useState } from "react";
 import MovieBanner from "@/components/MovieBanner";
-import Loader from "@/components/Loader";
 import MoviesListPreview from "@/components/moviesListPreview";
-
-interface Movie {
-  id: number;
-  title: string;
-  backdrop_path: string;
-  poster_path: string;
-  overview: string;
-  release_date: string;
-  vote_average: number;
-  vote_count: number;
-  popularity: number;
-  runtime: number;
-  genres: { id: number, name: string }[];
-  tagline: string;
-  origin_country: string[];
-  videos: { results: { key: string, type: string }[] };
-}
+import LoadingBanner from "@/components/LoadingBanner";
+import { Movie } from "@/types/types";
+import LoadingMovieList from "@/components/LoadingMovieList";
 
 export default function Home() {
   const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
@@ -55,23 +40,27 @@ export default function Home() {
 
   return (
     <div className="min-h-screen text-white">
-      {popularMovies.length > 0 && <MovieBanner movie={popularMovies[0]} />}
+      {loadingPopular ? (
+      <LoadingBanner />
+      ) : (
+      popularMovies.length > 0 && <MovieBanner movie={popularMovies[0]} />
+      )}
       <section className="ml-20 flex flex-col gap-16">
-        {loadingPopular ? (
-          <Loader message="Chargement des films populaires..." />
-        ) : (
-          <MoviesListPreview movies={popularMovies.slice(1, 100)} title="Les plus populaires" />
-        )}
-        {loadingUpcoming ? (
-          <Loader message="Chargement des films à venir..." />
-        ) : (
-          <MoviesListPreview movies={upcomingMovies.slice(0, 100)} title="À venir" />
-        )}
-        {loadingTopRated ? (
-          <Loader message="Chargement des films mieux notés..." />
-        ) : (
-          <MoviesListPreview movies={topRatedMovies.slice(0, 100)} title="Le public a adoré" />
-        )}
+      {loadingPopular ? (
+        <LoadingMovieList />
+      ) : (
+        <MoviesListPreview movies={popularMovies.slice(1, 100)} title="Les plus populaires" />
+      )}
+      {loadingUpcoming ? (
+        <LoadingMovieList />
+      ) : (
+        <MoviesListPreview movies={upcomingMovies.slice(0, 100)} title="À venir" />
+      )}
+      {loadingTopRated ? (
+        <LoadingMovieList />
+      ) : (
+        <MoviesListPreview movies={topRatedMovies.slice(0, 100)} title="Le public a adoré" />
+      )}
       </section>
     </div>
   );

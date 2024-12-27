@@ -14,9 +14,11 @@ export default function SearchBar() {
         movie: [],
         tv: [],
     });
+    const [isCooldown, setIsCooldown] = useState(false);
 
     useEffect(() => {
-        if (query.length > 2) {
+        if (query.length > 2 && !isCooldown) {
+            setIsCooldown(true);
             fetch(`/api/search?query=${query}`)
             .then((response) => response.json())
             .then((data) => {
@@ -30,6 +32,9 @@ export default function SearchBar() {
                 } else {
                     setResults({ person: [], movie: [], tv: [] });
                 }
+            })
+            .finally(() => {
+                setTimeout(() => setIsCooldown(false), 1000); // 1 second cooldown
             });
         } else {
             setResults({ person: [], movie: [], tv: [] });
@@ -64,7 +69,7 @@ export default function SearchBar() {
                 className="bg-transparent text-white border-none"
                 />
             </div>
-            <div className='fixed inset-0 bg-black bg-opacity-50 z-40 hidden' id="overlay" onClick={() => {
+            <div className='fixed inset-0 h-screen bg-black bg-opacity-50 z-40 hidden' id="overlay" onClick={() => {
             const searchBar = document.getElementById('searchBar');
             const overlay = document.getElementById('overlay');
             if (searchBar && overlay) {
@@ -74,7 +79,7 @@ export default function SearchBar() {
                 document.body.classList.remove('overflow-hidden');
             }
             }}></div>
-            <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex-col gap-2 w-full max-w-xl max-h-96 overflow-auto m-auto rounded-lg p-4 text-base bg-zinc-700 bg-opacity-50 backdrop-blur-md z-50 hidden' id="searchBar">
+            <div className='fixed top-[25dvh] left-1/2 transform -translate-x-1/2 flex-col gap-2 w-full max-w-xl max-h-96 overflow-auto m-auto rounded-lg p-4 text-base bg-zinc-700 bg-opacity-50 backdrop-blur-md z-50 hidden' id="searchBar">
             <Input type="text" value={query} onChange={(e) => setQuery(e.target.value)} className='w-full border-none text-lg bg-zinc-600 bg-opacity-50 backdrop-blur-sm' placeholder="Rechercher..." />
             <h4 className="text-lg">Acteurs</h4>
             <ul className='flex flex-col gap-2'>

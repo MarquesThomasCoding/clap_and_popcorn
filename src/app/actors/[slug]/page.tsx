@@ -3,30 +3,13 @@
 import MoviesListPreview from "@/components/moviesListPreview";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { Actor } from "@/types/types";
 
 export default function Page({
     params,
   }: {
     params: Promise<{ slug: string }>
   }) {
-    const [showMore, setShowMore] = useState(false);
-    interface Actor {
-        profile_path: string;
-        name: string;
-        biography: string;
-        movie_credits: {
-            cast: Array<{
-                id: number;
-                title: string;
-                poster_path: string;
-                backdrop_path: string;
-                overview: string;
-                release_date: string;
-                vote_average: number;
-                vote_count: number;
-            }>;
-        };
-    }
 
     const [actor, setActor] = useState<Actor | null>(null);
 
@@ -65,7 +48,7 @@ export default function Page({
                 <div className="flex flex-col gap-4">
                     <h1 className="text-4xl">{actor.name}</h1>
                     <p className="text-muted-foreground">
-                        {showMore ? actor.biography : `${actor.biography.substring(0, 500)}...`}
+                        {actor.biography.substring(0, 500)}...
                         <button onClick={() => showBiography()} className="text-white underline">
                             Voir plus
                         </button>

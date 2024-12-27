@@ -4,24 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Info, Play, Eye } from 'lucide-react';
 import TeaserPlayer from "./TeaserPlayer";
+import { Movie } from "@/types/types";
 
 interface MovieBannerProps {
-  movie: {
-    id: number;
-    title: string;
-    backdrop_path: string;
-    overview: string;
-    genres: { id: number, name: string }[];
-    release_date: string;
-    vote_average: number;
-    vote_count: number;
-    popularity: number;
-    runtime: number;
-    poster_path: string;
-    tagline: string;
-    origin_country: string[];
-    videos: { results: { key: string, type: string }[] };
-  },
+  movie: Movie;
   isMoviePage?: boolean;
 }
 
@@ -35,6 +21,11 @@ export default function MovieBanner({ movie, isMoviePage }: MovieBannerProps) {
     }
   }
 
+  const showOverview = () => {
+    const overview = document.getElementById("overview");
+    overview?.classList.toggle("hidden");
+};
+
   return (
     <div className={`relative ${!isMoviePage?'-mb-28':''}`}>
       <Image
@@ -46,7 +37,11 @@ export default function MovieBanner({ movie, isMoviePage }: MovieBannerProps) {
       />
       <div className={`absolute inset-0 bg-black bg-opacity-30 flex flex-col justify-end gap-8 p-8 ${isMoviePage?'':'pb-40'}`}>
         <h2 className="text-6xl font-bold mx-20 mb-2">{movie.title}</h2>
-        <p className="mx-20 text-lg max-w-96">{movie.overview}</p>
+        <p className="mx-20 text-lg max-w-96">{movie.overview.slice(0,300)}...
+          <button onClick={() => showOverview()} className="text-white underline">
+              Voir plus
+          </button>
+        </p>
         <div className="flex gap-4 mx-20">
           <button onClick={() => isMoviePage && showTeaser()} className={'flex items-center gap-2 rounded-lg px-8 py-3 bg-[#F7CC23] text-black'}><Play />Bande annonce</button>
           {!isMoviePage && <Link href={`/movies/${movie.id}`} className={'flex items-center gap-2 rounded-lg px-8 py-3 bg-white bg-opacity-30 backdrop-blur-sm'}><Info />Découvrir</Link>}
@@ -83,6 +78,12 @@ export default function MovieBanner({ movie, isMoviePage }: MovieBannerProps) {
           {movie.videos.results.filter((video: { type: string }) => video.type === 'Trailer')[0] && <TeaserPlayer videoId={movie.videos.results.filter((video: { type: string }) => video.type === 'Trailer')[0].key} />}
         </>
         }
+      </div>
+      <div id="overview" className="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" onClick={() => showOverview()}>
+          <span className="flex flex-col gap-2 w-1/2 h-1/2 overflow-y-auto rounded-md bg-zinc-900 p-8">
+              <h4 className="text-xl font-bold border-b border-zinc-400 p-2">Description</h4>
+              {movie.overview}
+          </span>
       </div>
     </div>
   );
