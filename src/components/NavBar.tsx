@@ -15,9 +15,7 @@ export const NavBar: React.FC = () => {
             <NavigationMenuList className="py-4">
                 <NavigationMenuItem className="flex items-center">
                     <Link href="/" legacyBehavior passHref>
-                        <NavigationMenuLink className={navigationMenuTriggerStyle() + ' bg-transparent hover:bg-transparent'}>
-                            <Image className="w-20 h-20" src="/imgs/logo_v1-without_bg.png" alt="Logo" width={500} height={500} />
-                        </NavigationMenuLink>
+                        <Image className="w-20 h-20" src="/imgs/logo_v1-without_bg.png" alt="Logo" width={500} height={500} />
                     </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>

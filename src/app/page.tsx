@@ -19,6 +19,7 @@ interface Movie {
   genres: { id: number, name: string }[];
   tagline: string;
   origin_country: string[];
+  videos: { results: { key: string, type: string }[] };
 }
 
 export default function Home() {

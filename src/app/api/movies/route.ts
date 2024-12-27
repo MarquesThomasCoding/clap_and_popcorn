@@ -23,7 +23,6 @@ export async function GET(request: Request) {
     let response2;
     if(url2) {
         response2 = await fetch(url2+'&language=fr-FR', options);
-        console.log(response2);
     }
     const data = await response.json();
     if(response2) data.recommendations = await response2.json();
