@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import Image from "next/image";
 import Link from "next/link";
+import SearchBar from "@/components/SearchBar";
 
 export const NavBar: React.FC = () => {
     return (
@@ -32,6 +33,9 @@ export const NavBar: React.FC = () => {
                             Acteurs
                         </NavigationMenuLink>
                     </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                    <SearchBar />
                 </NavigationMenuItem>
             </NavigationMenuList>
         </NavigationMenu>

@@ -14,6 +14,11 @@ interface Movie {
   release_date: string;
   vote_average: number;
   vote_count: number;
+  popularity: number;
+  runtime: number;
+  genres: { id: number, name: string }[];
+  tagline: string;
+  origin_country: string[];
 }
 
 export default function Home() {
@@ -25,21 +30,21 @@ export default function Home() {
   const [loadingTopRated, setLoadingTopRated] = useState(true);
 
   useEffect(() => {
-    fetch("/api/movies?query=popular")
+    fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/api/movies?query=popular")
       .then((response) => response.json())
       .then((data) => {
         setPopularMovies(data.results);
         setLoadingPopular(false);
       });
 
-    fetch("/api/movies?query=upcoming")
+    fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/api/movies?query=upcoming")
       .then((response) => response.json())
       .then((data) => {
         setUpcomingMovies(data.results);
         setLoadingUpcoming(false);
       });
 
-    fetch("/api/movies?query=top_rated")
+    fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/api/movies?query=top_rated")
       .then((response) => response.json())
       .then((data) => {
         setTopRatedMovies(data.results);

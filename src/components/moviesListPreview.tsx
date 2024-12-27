@@ -17,10 +17,10 @@ export default function MoviesListPreview(
 ) {
     return (
         <div className="flex flex-col gap-4">
-            <h1 className="text-3xl font-bold z-10">{title}</h1>
+            <h1 className="text-3xl font-bold z-[1]">{title}</h1>
             <div className='overflow-x-auto'>
                 <div className="grid grid-cols-[repeat(10,minmax(240px,1fr))] gap-4">
-                    {movies.map((movie) => (
+                    {movies.slice(0,10).map((movie) => (
                         <Link href={`/movies/${movie.id}`} key={movie.id} className="relative group overflow-hidden">
                             <Image
                                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
