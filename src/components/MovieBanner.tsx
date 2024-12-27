@@ -28,8 +28,11 @@ interface MovieBannerProps {
 export default function MovieBanner({ movie, isMoviePage }: MovieBannerProps) {
 
   const showTeaser = () => {
-    document.querySelector('#teaser-container')?.classList.remove('hidden');
-    document.body.classList.add('overflow-hidden');
+    const teaser = document.querySelector('#teaser-container');
+    if(teaser) {
+      document.querySelector('#teaser-container')?.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
   }
 
   return (
@@ -45,7 +48,7 @@ export default function MovieBanner({ movie, isMoviePage }: MovieBannerProps) {
         <h2 className="text-6xl font-bold mx-20 mb-2">{movie.title}</h2>
         <p className="mx-20 text-lg max-w-96">{movie.overview}</p>
         <div className="flex gap-4 mx-20">
-          <button onClick={() => showTeaser()} className={'flex items-center gap-2 rounded-lg px-8 py-3 bg-[#F7CC23] text-black'}><Play />Bande annonce</button>
+          <button onClick={() => isMoviePage && showTeaser()} className={'flex items-center gap-2 rounded-lg px-8 py-3 bg-[#F7CC23] text-black'}><Play />Bande annonce</button>
           {!isMoviePage && <Link href={`/movies/${movie.id}`} className={'flex items-center gap-2 rounded-lg px-8 py-3 bg-white bg-opacity-30 backdrop-blur-sm'}><Info />Découvrir</Link>}
           {isMoviePage && <Link href={`/movies/${movie.id}`} className={'flex items-center gap-2 rounded-lg px-8 py-3 bg-white bg-opacity-30 backdrop-blur-sm'}><Eye />Je veux le voir</Link>}
         </div>
@@ -77,7 +80,7 @@ export default function MovieBanner({ movie, isMoviePage }: MovieBannerProps) {
               ))}
               <span className="ml-2 text-sm">{movie.vote_average.toFixed(1)} ({movie.vote_count} votes)</span>
           </div>
-          <TeaserPlayer videoId={movie.videos.results.filter((video: { type: string }) => video.type === 'Trailer')[0].key} />
+          {movie.videos.results.filter((video: { type: string }) => video.type === 'Trailer')[0] && <TeaserPlayer videoId={movie.videos.results.filter((video: { type: string }) => video.type === 'Trailer')[0].key} />}
         </>
         }
       </div>

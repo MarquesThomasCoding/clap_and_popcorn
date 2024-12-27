@@ -11,7 +11,7 @@ import SearchBar from "@/components/SearchBar";
 
 export const NavBar: React.FC = () => {
     return (
-        <NavigationMenu className="fixed top-0 left-0 w-full px-20">
+        <NavigationMenu className="fixed top-0 left-0 w-full max-w-none justify-between px-20">
             <NavigationMenuList className="py-4">
                 <NavigationMenuItem className="flex items-center">
                     <Link href="/" legacyBehavior passHref>
@@ -32,6 +32,8 @@ export const NavBar: React.FC = () => {
                         </NavigationMenuLink>
                     </Link>
                 </NavigationMenuItem>
+            </NavigationMenuList>
+            <NavigationMenuList className="py-4">
                 <NavigationMenuItem>
                     <SearchBar />
                 </NavigationMenuItem>

@@ -60,17 +60,17 @@ export default function Home() {
         {loadingPopular ? (
           <Loader message="Chargement des films populaires..." />
         ) : (
-          <MoviesListPreview movies={popularMovies.slice(1, 10)} title="Les plus populaires" />
+          <MoviesListPreview movies={popularMovies.slice(1, 100)} title="Les plus populaires" />
         )}
         {loadingUpcoming ? (
           <Loader message="Chargement des films à venir..." />
         ) : (
-          <MoviesListPreview movies={upcomingMovies.slice(0, 10)} title="À venir" />
+          <MoviesListPreview movies={upcomingMovies.slice(0, 100)} title="À venir" />
         )}
         {loadingTopRated ? (
           <Loader message="Chargement des films mieux notés..." />
         ) : (
-          <MoviesListPreview movies={topRatedMovies.slice(0, 10)} title="Le public a adoré" />
+          <MoviesListPreview movies={topRatedMovies.slice(0, 100)} title="Le public a adoré" />
         )}
       </section>
     </div>
