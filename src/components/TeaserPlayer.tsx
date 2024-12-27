@@ -6,6 +6,10 @@ export default function TeaserPlayer({ videoId }: { videoId: string }) {
         if (iframe && overlay) {
             overlay.classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
+            const src = iframe.getAttribute('src');
+            if (src) {
+                iframe.setAttribute('src', src.replace('autoplay=1', 'autoplay=0'));
+            }
         }
     }}>
         <iframe className="w-5/6 h-5/6 rounded-lg" src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`} id="iframe" title="Bande-annonce" allow="autoplay; encrypted-media" allowFullScreen></iframe>

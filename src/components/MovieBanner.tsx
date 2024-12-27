@@ -79,7 +79,7 @@ export default function MovieBanner({ movie, isMoviePage }: MovieBannerProps) {
         </>
         }
       </div>
-      <div id="overview" className="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" onClick={() => showOverview()}>
+      <div id="overview" className="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10" onClick={() => showOverview()}>
           <span className="flex flex-col gap-2 w-1/2 h-1/2 overflow-y-auto rounded-md bg-zinc-900 p-8">
               <h4 className="text-xl font-bold border-b border-zinc-400 p-2">Description</h4>
               {movie.overview}
