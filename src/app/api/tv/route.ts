@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
-    let url = process.env.TMDB_BASE_URL + '/movie';
+    let url = process.env.TMDB_BASE_URL + '/tv';
     let url2;
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
         url += `/${query}?append_to_response=`;
     }
     else if(origin_country) {
-        url = `${process.env.TMDB_BASE_URL}/discover/movie?with_origin_country=${origin_country}`;
+        url = `${process.env.TMDB_BASE_URL}/discover/tv?with_origin_country=${origin_country}`;
     }
     const options = {
         headers: {
