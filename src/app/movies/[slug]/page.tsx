@@ -1,6 +1,7 @@
 import MovieBanner from "@/components/MovieBanner";
 import MoviesListPreview from "@/components/moviesListPreview";
-import { EyeClosed, Share2, HandCoins, PiggyBank } from "lucide-react";
+import SeeAndShareButtons from "@/components/SeeAndShareButtons";
+import { HandCoins, PiggyBank } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -11,7 +12,7 @@ export default async function Page({
   }) {
     const slug = (await params).slug
 
-    const movie = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/movies?id=${slug}`)
+    const movie = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/movies?id=${slug}`)
     .then((response) => response.json())
     .then((data) => {
         return data
@@ -21,16 +22,7 @@ export default async function Page({
         <>
             <MovieBanner movie={movie} isMoviePage />
             <main className="flex flex-col gap-8 mx-20 p-8">
-                <div className="flex gap-8 items-end">
-                    <button className="flex flex-col items-center">
-                        <EyeClosed className="w-8 h-8" />
-                        Vu
-                    </button>
-                    <button className="flex flex-col items-center">
-                        <Share2 className="w-8 h-8" />
-                        En cours
-                    </button>
-                </div>
+                <SeeAndShareButtons movie={movie} />
                 <section className="flex flex-col gap-4">
                     <h2 className="text-3xl">Produit par</h2>
                     <ul className="flex justify-between">
@@ -81,7 +73,7 @@ export default async function Page({
                                 return acc
                              }, []).map((member: { id: number, name: string, character: string, profile_path: string }) => (
                                 <li key={member.id} className="relative flex flex-col items-center w-36 group">
-                                    <Link href="/actors/[slug]" as={`/actors/${member.id}`}>
+                                    <Link href="/persons/[slug]" as={`/persons/${member.id}`}>
                                         {member.profile_path ?
                                         <Image
                                         src={`https://image.tmdb.org/t/p/w500/${member.profile_path}`}
