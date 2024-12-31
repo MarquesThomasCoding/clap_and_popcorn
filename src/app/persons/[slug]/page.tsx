@@ -3,7 +3,7 @@
 import MoviesListPreview from "@/components/moviesListPreview";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Actor } from "@/types/types";
+import { Person } from "@/types/types";
 
 export default function Page({
     params,
@@ -11,12 +11,12 @@ export default function Page({
     params: Promise<{ slug: string }>
   }) {
 
-    const [actor, setActor] = useState<Actor | null>(null);
+    const [actor, setActor] = useState<Person | null>(null);
 
     useEffect(() => {
         const fetchActor = async () => {
             const slug = (await params).slug;
-            const actorData = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/person?id=${slug}`)
+            const actorData = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/person?id=${slug}`)
                 .then((response) => response.json())
                 .then((data) => {
                     return data;
