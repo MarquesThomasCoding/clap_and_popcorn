@@ -7,7 +7,7 @@ import LoadingBanner from "@/components/LoadingBanner";
 import { Movie } from "@/types/types";
 import LoadingMovieList from "@/components/LoadingMovieList";
 
-export default function Home() {
+export default function Page() {
   const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
   const [upcomingMovies, setUpcomingMovies] = useState<Movie[]>([]);
   const [topRatedMovies, setTopRatedMovies] = useState<Movie[]>([]);

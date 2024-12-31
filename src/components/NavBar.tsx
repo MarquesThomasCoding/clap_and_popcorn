@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { onAuthStateChanged, signOut, User } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
 import {
   NavigationMenu,
@@ -21,12 +21,22 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
+import useAuth from "@/hooks/useAuth";
 
 export const NavBar: React.FC = () => {
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollTop = React.useRef(0);
 
-  const [user, setUser] = useState<User | null>(null);
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+      console.log("User:", user); // Ajoutez ce log pour vérifier l'état de l'utilisateur
+  
+      if (loading) {
+        // Si l'état de chargement est en cours, ne rien faire
+        return;
+      }
+    }, [user, loading]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,18 +58,9 @@ export const NavBar: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      setUser(null);
     } catch (error) {
       console.error(error);
     }

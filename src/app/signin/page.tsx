@@ -4,15 +4,15 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import {
-  onAuthStateChanged,
   User,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/firebaseConfig";
+import useAuth from "@/hooks/useAuth";
 import SignIn from "@/components/SignIn";
 import SignUp from "@/components/SignUp";
 
@@ -25,25 +25,23 @@ export default function Page() {
 
   const router = useRouter();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
-      setUser(user);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  useAuth();
 
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
       setUser(result.user);
-      await setDoc(doc(db, "users", result.user.uid), {
-        email: result.user.email,
-        displayName: result.user.displayName,
-        seen_movies: [],
-        to_see_movies: [],
-      });
+      const userDocRef = doc(db, "users", result.user.uid);
+      const userDoc = await getDoc(userDocRef);
+      if (!userDoc.exists) {
+        await setDoc(userDocRef, {
+          email: result.user.email,
+          displayName: result.user.displayName,
+          seen_movies: [],
+          to_see_movies: [],
+        });
+      }
       router.push("/");
     } catch (error) {
       setError((error as Error).message);
@@ -87,7 +85,7 @@ export default function Page() {
     if (user) {
       router.push("/");
     }
-  }, [user]);
+  }, [user, router]);
 
   return (
     <div>
