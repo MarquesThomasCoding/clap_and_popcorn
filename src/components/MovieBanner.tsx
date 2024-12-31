@@ -5,6 +5,10 @@ import Link from "next/link";
 import { Info, Play, Eye } from 'lucide-react';
 import TeaserPlayer from "./TeaserPlayer";
 import { Movie } from "@/types/types";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { auth, db } from "@/firebaseConfig";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
 interface MovieBannerProps {
   movie: Movie;
@@ -12,6 +16,39 @@ interface MovieBannerProps {
 }
 
 export default function MovieBanner({ movie, isMoviePage }: MovieBannerProps) {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleAddToSee = (movie: Movie) => {
+    const movieToSee = {
+      id: movie.id,
+      title: movie.title,
+      poster_path: movie.poster_path,
+      release_date: movie.release_date,
+      vote_average: movie.vote_average,
+      overview: movie.overview,
+    }
+    if (user) {
+      const userRef = doc(db, "users", user.uid);
+      updateDoc(userRef, {
+        to_see_movies: arrayUnion(movieToSee),
+      }).then(() => {
+        console.log("Movie added to 'to_see' list");
+      }).catch((error) => {
+        console.error("Error adding movie to 'to_see' list: ", error);
+      });
+    } else {
+      console.log("User not logged in");
+    }
+  };
+
 
   const showTeaser = () => {
     const teaser = document.querySelector('#teaser-container');
@@ -45,7 +82,7 @@ export default function MovieBanner({ movie, isMoviePage }: MovieBannerProps) {
         <div className="flex gap-4 mx-20">
           <button onClick={() => isMoviePage && showTeaser()} className={'flex items-center gap-2 rounded-lg px-8 py-3 bg-[#F7CC23] text-black'}><Play />Bande annonce</button>
           {!isMoviePage && <Link href={`/movies/${movie.id}`} className={'flex items-center gap-2 rounded-lg px-8 py-3 bg-white bg-opacity-30 backdrop-blur-sm'}><Info />Découvrir</Link>}
-          {isMoviePage && <Link href={`/movies/${movie.id}`} className={'flex items-center gap-2 rounded-lg px-8 py-3 bg-white bg-opacity-30 backdrop-blur-sm'}><Eye />Je veux le voir</Link>}
+          {isMoviePage && user && <button onClick={() => handleAddToSee(movie)} className={'flex items-center gap-2 rounded-lg px-8 py-3 bg-white bg-opacity-30 backdrop-blur-sm'}><Eye />Je veux le voir</button>}
         </div>
         {isMoviePage &&
         <>
