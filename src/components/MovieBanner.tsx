@@ -1,6 +1,6 @@
 "use client"
 
-import Image from "next/image";
+// import Image from "next/image";
 import Link from "next/link";
 import { Info, Play, Eye } from 'lucide-react';
 import TeaserPlayer from "./TeaserPlayer";
@@ -64,15 +64,22 @@ export default function MovieBanner({ movie, isMoviePage }: MovieBannerProps) {
 };
 
   return (
-    <div className={`relative ${!isMoviePage?'-mb-28':''}`}>
-      <Image
+    <div className={`
+      relative ${!isMoviePage?'-mb-28':''}
+      w-full h-screen
+      [background-size:cover]
+      [background-position:top]
+      [background-repeat:no-repeat]
+      bg-fixed
+      `} style={{backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.backdrop_path})`}}>
+      {/* <Image
         src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`}
         alt={movie.title}
         width={1920}
         height={1080}
         className="w-full h-screen object-cover"
-      />
-      <div className={`absolute inset-0 bg-black bg-opacity-30 flex flex-col justify-end gap-8 p-8 ${isMoviePage?'':'pb-40'}`}>
+      /> */}
+      <div className={`absolute inset-0 flex flex-col justify-end gap-8 p-8 ${isMoviePage?'':'pb-40'}`} style={{ background: "linear-gradient(360deg, black, transparent)"}}>
         <h2 className="text-6xl font-bold mx-20 mb-2">{movie.title}</h2>
         <p className="mx-20 text-lg max-w-96">{movie.overview.slice(0,300)}...
           <button onClick={() => showOverview()} className="text-white underline">

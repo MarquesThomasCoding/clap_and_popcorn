@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { Search, UserCircle2Icon } from 'lucide-react';
+import { Search, Share2Icon, UserCircle2Icon } from 'lucide-react';
 
 export default function SearchBar() {
     const [query, setQuery] = useState('');
@@ -92,6 +92,7 @@ export default function SearchBar() {
                             <UserCircle2Icon className='w-8 h-8 text-white' />
                         )}
                         {person.name}
+                        <button className='ml-auto'><Share2Icon /></button>
                     </Link>
                 </li>
                 ))}
