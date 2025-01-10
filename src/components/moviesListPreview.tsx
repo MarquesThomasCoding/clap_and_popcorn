@@ -1,6 +1,7 @@
 import { Movie } from '@/types/types';
 import MoviePreview from './MoviePreview';
 import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
 
 export default function MoviesListPreview(
     { movies, title, seeMore, href, grid }: Readonly<{ movies: Movie[], title: string, seeMore?: boolean, href?: string, grid?: boolean }>
@@ -10,7 +11,7 @@ export default function MoviesListPreview(
             <div className='flex justify-between items-center'>
                 <h1 className="text-3xl font-bold z-[1]">{title}</h1>
                 {seeMore && (
-                    <Link href={href || ""}>Voir plus</Link>
+                    <Link href={href || ""} className='flex items-center gap-2'>Voir plus <ChevronRight /></Link>
                 )}
             </div>
             <div className='overflow-x-auto'>
