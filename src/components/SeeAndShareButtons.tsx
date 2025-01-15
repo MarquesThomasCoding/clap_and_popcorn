@@ -3,30 +3,16 @@
 
 import { useState, useEffect } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { auth, db } from "@/firebaseConfig";
-import { doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
+import { auth } from "@/firebaseConfig";
 import { Eye, EyeClosed, Share2 } from "lucide-react";
 import { Movie } from "@/types/types";
 import ShareButtons from "./ShareButtons"; // Import the ShareButtons component
+import { addSeenMedia, checkMovieInSeenList } from "@/lib/utils";
 
-// Function to check if a movie is in the user's seen list
-const checkMovieInSeenList = async (userId: string, movieId: number) => {
-  const userRef = doc(db, "users", userId);
-  const docSnap = await getDoc(userRef);
-
-  if (docSnap.exists()) {
-    const userData = docSnap.data();
-    const seenMovies = userData.seen_movies || [];
-    return seenMovies.some((movie: Movie) => movie.id === movieId);
-  } else {
-    return false; // Movie ID not found in seen_movies list
-  }
-};
-
-export default function SeeAndShareButtons({ movie }: { movie: Movie }) {
+export default function SeeAndShareButtons({ movie, type }: { movie: Movie, type: "movie" | "serie" }) {
   const [user, setUser] = useState<User | null>(null);
   const [isSeen, setIsSeen] = useState(false);
-  const [showShareButtons, setShowShareButtons] = useState(false); // State to control visibility of ShareButtons
+  const [showShareButtons, setShowShareButtons] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -37,40 +23,18 @@ export default function SeeAndShareButtons({ movie }: { movie: Movie }) {
 
   useEffect(() => {
     if (user) {
-      // Check if the movie is already in the user's 'seen_movies' list from Firestore
       const checkSeen = async () => {
-        const isSeen = await checkMovieInSeenList(user.uid, movie.id);
+        const isSeen = await checkMovieInSeenList(movie.id);
         setIsSeen(isSeen);
       };
       checkSeen();
     }
   }, [user, movie.id]);
 
-  const handleAddSeen = (movie: Movie) => {
-    const movieSeen = {
-      id: movie.id,
-      title: movie.title,
-      poster_path: movie.poster_path,
-      release_date: movie.release_date,
-      vote_average: movie.vote_average,
-      overview: movie.overview,
-    };
-    if (user) {
-      const userRef = doc(db, "users", user.uid);
-      updateDoc(userRef, {
-        seen_movies: arrayUnion(movieSeen),
-      })
-        .then(() => {
-          console.log("Movie added to 'to_see' list");
-        })
-        .catch((error) => {
-          console.error("Error adding movie to 'to_see' list: ", error);
-        });
-      setIsSeen(true);
-    } else {
-      console.log("User not logged in");
-    }
-  };
+  const handleAddSeenMedia = () => {
+    addSeenMedia(movie, type);
+    setIsSeen(true);
+  }
 
   const handleShareClick = () => {
     document.body.classList.toggle("overflow-hidden");
@@ -88,7 +52,7 @@ export default function SeeAndShareButtons({ movie }: { movie: Movie }) {
             </button>
           ) : (
             <button className="flex flex-col items-center">
-              <Eye onClick={() => handleAddSeen(movie)} className="w-8 h-8" />
+              <Eye onClick={() => handleAddSeenMedia()} className="w-8 h-8" />
               Vu
             </button>
           )}
@@ -96,7 +60,7 @@ export default function SeeAndShareButtons({ movie }: { movie: Movie }) {
             <Share2 className="w-8 h-8" />
             Partager
           </button>
-          {showShareButtons && <ShareButtons url={window.location.href} title={movie.title} />} {/* Conditionally render ShareButtons */}
+          {showShareButtons && <ShareButtons url={window.location.href} title={movie.title} />}
         </>
       )}
     </div>
