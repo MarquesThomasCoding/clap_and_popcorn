@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import { getToSeeMovies } from "@/lib/utils";
 import { Movie } from "@/types/types";
-import LoadingMovieList from "@/components/LoadingMovieList";
-import MoviesListPreview from "@/components/moviesListPreview";
+import LoadingMediaList from "@/components/LoadingMediaList";
+import MediaListPreview from "@/components/MediaListPreview";
 
 const ToSeePage = () => {
   const { user, loading } = useAuth();
@@ -36,12 +36,12 @@ const ToSeePage = () => {
   }, [user, loading, router]);
 
   if (pageLoading) {
-    return <LoadingMovieList />;
+    return <LoadingMediaList />;
   }
 
   return (
     <section className="m-20 flex flex-col gap-16">
-      <MoviesListPreview movies={toSeeMovies} title="My To See Movies" grid />
+      <MediaListPreview medias={toSeeMovies} title="My To See Movies" grid />
     </section>
   );
 };

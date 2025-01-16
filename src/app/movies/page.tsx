@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import MovieBanner from "@/components/MovieBanner";
-import MoviesListPreview from "@/components/moviesListPreview";
+import MediaBanner from "@/components/MediaBanner";
+import MediaListPreview from "@/components/MediaListPreview";
 import LoadingBanner from "@/components/LoadingBanner";
 import { Movie } from "@/types/types";
-import LoadingMovieList from "@/components/LoadingMovieList";
+import LoadingMediaList from "@/components/LoadingMediaList";
 
 export default function Page() {
   const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
@@ -60,35 +60,35 @@ export default function Page() {
   return (
     <div className="min-h-screen text-white">
         {loadingTrendingMovies ? (
-        <LoadingBanner />
+          <LoadingBanner />
         ) : (
-        trendingMovies.length > 0 && <MovieBanner movie={trendingMovies[0]} />
+          trendingMovies.length > 0 && <MediaBanner media={trendingMovies[0]} type="movie" />
         )}
         <section className="ml-20 flex flex-col gap-16">
         {loadingPopular ? (
-            <LoadingMovieList />
+          <LoadingMediaList />
         ) : (
-            <MoviesListPreview movies={popularMovies.slice(1, 100)} title="Les plus populaires" />
+          <MediaListPreview medias={popularMovies.slice(0, 100)} title="Les plus populaires" />
         )}
         {loadingTrendingMovies ? (
-        <LoadingMovieList />
+          <LoadingMediaList />
         ) : (
-        <MoviesListPreview movies={trendingMovies.slice(0, 100)} title="En tendance" />
+          <MediaListPreview medias={trendingMovies.slice(0, 100)} title="En tendance" />
         )}
         {loadingUpcoming ? (
-            <LoadingMovieList />
+          <LoadingMediaList />
         ) : (
-            <MoviesListPreview movies={upcomingMovies.slice(0, 100)} title="À venir" />
+          <MediaListPreview medias={upcomingMovies.slice(0, 100)} title="À venir" />
         )}
         {loadingTopRated ? (
-            <LoadingMovieList />
+          <LoadingMediaList />
         ) : (
-            <MoviesListPreview movies={topRatedMovies.slice(0, 100)} title="Le public a adoré" />
+          <MediaListPreview medias={topRatedMovies.slice(0, 100)} title="Le public a adoré" />
         )}
         {loadingFrenchMovies ? (
-            <LoadingMovieList />
+          <LoadingMediaList />
         ) : (
-            <MoviesListPreview movies={frenchMovies.slice(0, 100)} title="Made in France" />
+          <MediaListPreview medias={frenchMovies.slice(0, 100)} title="Made in France" />
         )}
       </section>
     </div>

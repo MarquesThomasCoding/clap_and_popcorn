@@ -1,5 +1,5 @@
-import MovieBanner from "@/components/MovieBanner";
-import MoviesListPreview from "@/components/moviesListPreview";
+import MediaBanner from "@/components/MediaBanner";
+import MediaListPreview from "@/components/MediaListPreview";
 import SeeAndShareButtons from "@/components/SeeAndShareButtons";
 import { HandCoins, PiggyBank } from "lucide-react";
 import Image from "next/image";
@@ -20,9 +20,9 @@ export default async function Page({
 
     return (
         <>
-            <MovieBanner movie={movie} isMoviePage />
+            <MediaBanner media={movie} type="movie" isMediaPage />
             <main className="flex flex-col gap-8 mx-20 p-8">
-                <SeeAndShareButtons movie={movie} />
+                <SeeAndShareButtons media={movie} type="movie" />
                 <section className="flex flex-col gap-4">
                     <h2 className="text-3xl">Produit par</h2>
                     <ul className="flex justify-between">
@@ -99,7 +99,7 @@ export default async function Page({
                     <span className="flex items-center gap-2"><HandCoins /> {movie.revenue.toLocaleString()} $ <span className="text-sm text-muted-foreground px-2 rounded-sm bg-white bg-opacity-5 backdrop-blur-sm">Revenus</span></span>
                     <span className="flex items-center gap-2"><PiggyBank /> {movie.budget.toLocaleString()} $ <span className="text-sm text-muted-foreground px-2 rounded-sm bg-white bg-opacity-5 backdrop-blur-sm">Budget</span></span>
                 </section>
-                <MoviesListPreview movies={movie.recommendations.results} title="Vous aimerez sans doute" />
+                <MediaListPreview medias={movie.recommendations.results} type="movie" title="Similaire" />
             </main>
         </>
     )

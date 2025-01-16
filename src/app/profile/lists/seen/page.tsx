@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import { getSeenMovies } from "@/lib/utils";
 import { Movie } from "@/types/types";
-import LoadingMovieList from "@/components/LoadingMovieList";
-import MoviesListPreview from "@/components/moviesListPreview";
+import LoadingMediaList from "@/components/LoadingMediaList";
+import MediaListPreview from "@/components/MediaListPreview";
 
 const SeenPage = () => {
   const { user, loading } = useAuth();
@@ -36,12 +36,12 @@ const SeenPage = () => {
   }, [user, loading, router]);
 
   if (pageLoading) {
-    return <LoadingMovieList />;
+    return <LoadingMediaList />;
   }
 
   return (
     <section className="m-20 flex flex-col gap-16">
-      <MoviesListPreview movies={seenMovies} title="My Seen Movies" grid />
+      <MediaListPreview medias={seenMovies} title="My Seen Movies" grid />
     </section>
   );
 };

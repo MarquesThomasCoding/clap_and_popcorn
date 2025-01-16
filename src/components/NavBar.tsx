@@ -30,10 +30,7 @@ export const NavBar: React.FC = () => {
   const { user, loading } = useAuth();
 
   useEffect(() => {
-      console.log("User:", user); // Ajoutez ce log pour vérifier l'état de l'utilisateur
-  
       if (loading) {
-        // Si l'état de chargement est en cours, ne rien faire
         return;
       }
     }, [user, loading]);

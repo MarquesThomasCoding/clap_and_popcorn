@@ -41,10 +41,6 @@ export default function SearchBar() {
         }
     }, [query]);
 
-    useEffect(() => {
-        console.log('Results have changed:', results);
-    }, [results]);
-
     const displayExtenedSearchBar = () => {
         const searchBar = document.getElementById('searchBar');
         const overlay = document.getElementById('overlay');

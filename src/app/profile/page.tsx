@@ -16,7 +16,7 @@ import useAuth from "@/hooks/useAuth";
 import { getToSeeMovies, getSeenMovies, updateDisplayName } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import MoviesListPreview from "@/components/moviesListPreview";
+import MediaListPreview from "@/components/MediaListPreview";
 import { Edit2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -125,18 +125,8 @@ export default function Page() {
             </DialogContent>
           </Dialog>
         </h1>
-        <MoviesListPreview
-          movies={toSeeMovies}
-          title="Mes films à voir"
-          href="/profile/lists/to-see"
-          seeMore
-        />
-        <MoviesListPreview
-          movies={seenMovies}
-          title="Mes films vus"
-          href="/profile/lists/seen"
-          seeMore
-        />
+        <MediaListPreview medias={toSeeMovies} title="Mes films à voir" href="/profile/lists/to-see" seeMore />
+        <MediaListPreview medias={seenMovies} title="Mes films vus" href="/profile/lists/seen" seeMore />
       </section>
     </div>
   );

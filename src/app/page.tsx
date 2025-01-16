@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import MovieBanner from "@/components/MovieBanner";
+import MediaBanner from "@/components/MediaBanner";
 import AllListPreview from "@/components/AllListPreview";
-import MoviesListPreview from "@/components/moviesListPreview";
-import SeriesListPreview from "@/components/SeriesListPreview";
+import MediaListPreview from "@/components/MediaListPreview";
 import PersonsListPreview from "@/components/PersonsListPreview";
 import LoadingBanner from "@/components/LoadingBanner";
 import { Movie, Serie, Person } from "@/types/types";
-import LoadingMovieList from "@/components/LoadingMovieList";
+import LoadingMediaList from "@/components/LoadingMediaList";
 
 export default function Home() {
   const [trendingAll, setTrendingAll] = useState<(Movie | Serie | Person)[]>([]);
@@ -55,26 +54,26 @@ export default function Home() {
       {loadingTrendingMovies ? (
       <LoadingBanner />
       ) : (
-      trendingMovies.length > 0 && <MovieBanner movie={trendingMovies[0]} />
+      trendingMovies.length > 0 && <MediaBanner media={trendingMovies[0]} type="movie" />
       )}
       <section className="ml-20 flex flex-col gap-16">
       {loadingTrendingAll ? (
-        <LoadingMovieList />
+        <LoadingMediaList />
       ) : (
         <AllListPreview elements={trendingAll.slice(0, 100)} title="Tendance" />
       )}
       {loadingTrendingMovies ? (
-        <LoadingMovieList />
+        <LoadingMediaList />
       ) : (
-        <MoviesListPreview movies={trendingMovies.slice(0, 100)} title="Films tendance" />
+        <MediaListPreview medias={trendingMovies.slice(0, 100)} type="movie" title="Films tendance" />
       )}
       {loadingTrendingTV ? (
-        <LoadingMovieList />
+        <LoadingMediaList />
       ) : (
-        <SeriesListPreview series={trendingTV.slice(0, 100)} title="Séries tendance" />
+        <MediaListPreview medias={trendingTV.slice(0, 100)} type="serie" title="Séries tendance" />
       )}
       {loadingTrendingPersons ? (
-        <LoadingMovieList />
+        <LoadingMediaList />
       ) : (
         <PersonsListPreview persons={trendingPersons.slice(0, 100)} title="Personnalités tendance" />
       )}

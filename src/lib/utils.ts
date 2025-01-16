@@ -52,7 +52,7 @@ export const updateDisplayName = async (newDisplayName: string) => {
   }
 };
 
-export const checkMovieInSeenList = async (movieId: number) => {
+export const checkMediaInSeenList = async (mediaId: number, type: "movie" | "serie") => {
   if (!auth.currentUser) return false;
   const userId = auth.currentUser.uid;
   const userRef = doc(db, "users", userId);
@@ -60,35 +60,38 @@ export const checkMovieInSeenList = async (movieId: number) => {
 
   if (docSnap.exists()) {
     const userData = docSnap.data();
-    const seenMovies = userData.seen_movies || [];
-    return seenMovies.some((movie: Movie) => movie.id === movieId);
+    const seenList = type === "movie" ? userData.seen_movies || [] : userData.seen_series || [];
+    return seenList.some((media: Movie | Serie) => media.id === mediaId);
   } else {
     return false;
   }
 };
 
-export const addToSeeMovie = (movie: Movie) => {
-  const movieToSee = {
-    id: movie.id,
-    title: movie.title,
-    poster_path: movie.poster_path,
-    release_date: movie.release_date,
-    vote_average: movie.vote_average,
-    overview: movie.overview,
-  }
+export const addToSeeMedia = (media: Movie | Serie, type: "movie" | "serie") => {
+  const mediaToSee = <Movie | Serie>{
+    id: media.id,
+    title: type === "movie" ? (media as Movie).title : (media as Serie).name,
+    poster_path: media.poster_path,
+    release_date: type === "movie" ? (media as Movie).release_date : (media as Serie).first_air_date,
+    vote_average: media.vote_average,
+    overview: media.overview,
+  };
 
   if (auth.currentUser) {
     const userUid = auth.currentUser.uid;
     if (userUid) {
       const userRef = doc(db, "users", userUid);
+      const updateField = type === "movie" ? "to_see_movies" : "to_see_series";
       updateDoc(userRef, {
-        to_see_movies: arrayUnion(movieToSee),
-      }).then(() => {
-        return { success: true, message: "Film ajouté à la liste 'à voir'" };
-      }).catch((error) => {
-        console.error("Erreur lors de l'ajout du film à la liste 'à voir' : ", error);
-        return { success: false, message: error };
-      });
+        [updateField]: arrayUnion(mediaToSee),
+      })
+        .then(() => {
+          return { success: true, message: `Film ajouté à la liste 'à voir'` };
+        })
+        .catch((error) => {
+          console.error(`Erreur lors de l'ajout du ${type} à la liste 'à voir' : `, error);
+          return { success: false, message: error };
+        });
     } else {
       console.log("Utilisateur non connecté");
       return { success: false, message: "Utilisateur non connecté" };

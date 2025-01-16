@@ -1,8 +1,26 @@
-import SerieBanner from "@/components/SerieBanner";
-import SeriesListPreview from "@/components/SeriesListPreview";
-import { EyeClosed, Share2 } from "lucide-react";
+import MediaBanner from "@/components/MediaBanner";
+import MediaListPreview from "@/components/MediaListPreview";
+import SeeAndShareButtons from "@/components/SeeAndShareButtons";
+import { Serie } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
+
+const getSerie = async (slug: string) => {
+    const serie = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tv?id=${slug}`)
+    .then((response) => response.json())
+    .then((data) => {
+        data.title = data.name
+        data.release_date = data.first_air_date
+        data.recommendations.results = data.recommendations.results.map((serie: Serie) => {
+            serie.title = serie.name
+            serie.release_date = serie.first_air_date
+            return serie
+        })
+        return data
+    });
+
+    return serie
+}
 
 export default async function Page({
     params,
@@ -11,26 +29,13 @@ export default async function Page({
   }) {
     const slug = (await params).slug
 
-    const serie = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/tv?id=${slug}`)
-    .then((response) => response.json())
-    .then((data) => {
-        return data
-    });
+    const serie = await getSerie(slug)
 
     return (
         <>
-            <SerieBanner serie={serie} isSeriePage />
+            <MediaBanner media={serie} type="serie" isMediaPage />
             <main className="flex flex-col gap-8 mx-20 p-8">
-                <div className="flex gap-8 items-end">
-                    <button className="flex flex-col items-center">
-                        <EyeClosed className="w-8 h-8" />
-                        Vu
-                    </button>
-                    <button className="flex flex-col items-center">
-                        <Share2 className="w-8 h-8" />
-                        En cours
-                    </button>
-                </div>
+                <SeeAndShareButtons media={serie} type="serie" />
                 <section className="flex flex-col gap-4">
                     <h2 className="text-3xl">Produit par</h2>
                     <ul className="flex justify-between">
@@ -104,10 +109,8 @@ export default async function Page({
                 </section>
                 <section className="flex flex-col gap-4 overflow-hidden">
                     <h2 className="text-3xl">Saisons et episodes</h2>
-                    {/* <span className="flex items-center gap-2"><HandCoins /> {serie.revenue.toLocaleString()} $ <span className="text-sm text-muted-foreground px-2 rounded-sm bg-white bg-opacity-5 backdrop-blur-sm">Revenus</span></span>
-                    <span className="flex items-center gap-2"><PiggyBank /> {serie.budget.toLocaleString()} $ <span className="text-sm text-muted-foreground px-2 rounded-sm bg-white bg-opacity-5 backdrop-blur-sm">Budget</span></span> */}
                 </section>
-                <SeriesListPreview series={serie.recommendations.results} title="Vous aimerez sans doute" />
+                <MediaListPreview medias={serie.recommendations.results} type="serie" title="Similaire" />
             </main>
         </>
     )

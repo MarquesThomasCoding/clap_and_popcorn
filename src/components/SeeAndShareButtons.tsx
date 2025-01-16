@@ -5,11 +5,11 @@ import { useState, useEffect } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
 import { Eye, EyeClosed, Share2 } from "lucide-react";
-import { Movie } from "@/types/types";
+import { Movie, Serie } from "@/types/types";
 import ShareButtons from "./ShareButtons"; // Import the ShareButtons component
-import { addSeenMedia, checkMovieInSeenList } from "@/lib/utils";
+import { addSeenMedia, checkMediaInSeenList } from "@/lib/utils";
 
-export default function SeeAndShareButtons({ movie, type }: { movie: Movie, type: "movie" | "serie" }) {
+export default function SeeAndShareButtons({ media, type }: { media: Movie | Serie, type: "movie" | "serie" }) {
   const [user, setUser] = useState<User | null>(null);
   const [isSeen, setIsSeen] = useState(false);
   const [showShareButtons, setShowShareButtons] = useState(false);
@@ -24,15 +24,15 @@ export default function SeeAndShareButtons({ movie, type }: { movie: Movie, type
   useEffect(() => {
     if (user) {
       const checkSeen = async () => {
-        const isSeen = await checkMovieInSeenList(movie.id);
+        const isSeen = await checkMediaInSeenList(media.id, type);
         setIsSeen(isSeen);
       };
       checkSeen();
     }
-  }, [user, movie.id]);
+  }, [user, media.id, type]);
 
   const handleAddSeenMedia = () => {
-    addSeenMedia(movie, type);
+    addSeenMedia(media, type);
     setIsSeen(true);
   }
 
@@ -60,7 +60,7 @@ export default function SeeAndShareButtons({ movie, type }: { movie: Movie, type
             <Share2 className="w-8 h-8" />
             Partager
           </button>
-          {showShareButtons && <ShareButtons url={window.location.href} title={movie.title} />}
+          {showShareButtons && <ShareButtons url={window.location.href} title={media.title} />}
         </>
       )}
     </div>

@@ -1,6 +1,5 @@
 import { Movie, Serie, Person } from '@/types/types';
-import MoviePreview from './MoviePreview';
-import SeriePreview from './SeriePreview';
+import MediaPreview from './MediaPreview';
 import PersonPreview from './PersonPreview';
 
 export default function AllListPreview(
@@ -15,9 +14,9 @@ export default function AllListPreview(
                         <div key={element.id} className='overflow-hidden'>
                             {
                                 element.media_type === 'movie' ? (
-                                    <MoviePreview movie={element as Movie} />
+                                    <MediaPreview media={element as Movie} type="movie" />
                                 ) : element.media_type === 'tv' ? (
-                                    <SeriePreview serie={element as Serie} />
+                                    <MediaPreview media={element as Serie} type="serie" />
                                 ) : (
                                     <PersonPreview person={element as Person} />
                                 )

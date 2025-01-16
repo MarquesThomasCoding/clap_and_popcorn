@@ -16,19 +16,18 @@ export interface Movie {
     tagline: string;
     origin_country: string[];
     videos: { results: { key: string, type: string }[] };
-    credits: { cast: { id: number, name: string, character: string, profile_path: string, known_for_department: string }[], crew: { id: number, name: string, job: string, profile_path: string, known_for_department: string }[] };
-    recommendations: { results: Movie[] };
-    production_companies: { id: number, name: string, logo_path: string }[];
 }
 
 export interface Serie {
     id: number;
     media_type: string;
+    title: string;
     name: string;
     backdrop_path: string;
     overview: string;
     genres: { id: number, name: string }[];
     first_air_date: string;
+    release_date: string;
     last_air_date: string;
     episode_run_time: number[];
     vote_average: number;

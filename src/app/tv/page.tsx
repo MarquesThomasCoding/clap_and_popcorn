@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import SerieBanner from "@/components/SerieBanner";
-import SeriesListPreview from "@/components/SeriesListPreview";
+import MediaBanner from "@/components/MediaBanner";
+import MediaListPreview from "@/components/MediaListPreview";
 import LoadingBanner from "@/components/LoadingBanner";
 import { Serie } from "@/types/types";
-import LoadingMovieList from "@/components/LoadingMovieList";
+import LoadingMediaList from "@/components/LoadingMediaList";
 
 export default function Home() {
   const [USSeries, setUSSeries] = useState<Serie[]>([]);
@@ -21,28 +21,44 @@ export default function Home() {
     fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/tv?origin_country=US")
       .then((response) => response.json())
       .then((data) => {
-        setUSSeries(data.results);
+        setUSSeries(data.results.map((serie: Serie) => {
+          serie.title = serie.name;
+          serie.release_date = serie.first_air_date;
+          return serie;
+        }));
         setLoadingUS(false);
       });
 
     fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/tv?origin_country=FR")
       .then((response) => response.json())
       .then((data) => {
-        setFrenchSeries(data.results);
+        setFrenchSeries(data.results.map((serie: Serie) => {
+          serie.title = serie.name;
+          serie.release_date = serie.first_air_date;
+          return serie;
+        }));
         setLoadingFrench(false);
       });
       
     fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/tv?query=top_rated")
     .then((response) => response.json())
     .then((data) => {
-        setTopRatedSeries(data.results);
+        setTopRatedSeries(data.results.map((serie: Serie) => {
+          serie.title = serie.name;
+          serie.release_date = serie.first_air_date;
+          return serie;
+        }));
         setLoadingTopRated(false);
       });
 
     fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/tv?query=popular")
     .then((response) => response.json())
     .then((data) => {
-        setPopularSeries(data.results);
+        setPopularSeries(data.results.map((serie: Serie) => {
+          serie.title = serie.name;
+          serie.release_date = serie.first_air_date;
+          return serie;
+        }));
         setLoadingPopular(false);
       });
   }, []);
@@ -52,28 +68,28 @@ export default function Home() {
       {loadingTopRated ? (
         <LoadingBanner />
       ) : (
-        topRatedSeries.length > 0 && <SerieBanner serie={topRatedSeries[0]} />
+        topRatedSeries.length > 0 && <MediaBanner media={topRatedSeries[0]} type="serie" />
       )}
       <section className="ml-20 flex flex-col gap-16">
         {loadingTopRated ? (
-            <LoadingMovieList />
+            <LoadingMediaList />
         ) : (
-            <SeriesListPreview series={topRatedSeries.slice(1, 100)} title="Le public adore" />
+            <MediaListPreview medias={topRatedSeries.slice(1, 100)} type="serie" title="Le public adore" />
         )}
         {loadingPopular ? (
-            <LoadingMovieList />
+            <LoadingMediaList />
         ) : (
-            <SeriesListPreview series={popularSeries.slice(0, 100)} title="Les plus populaires" />
+            <MediaListPreview medias={popularSeries.slice(0, 100)} type="serie" title="Les plus populaires" />
         )}
         {loadingUS ? (
-            <LoadingMovieList />
+            <LoadingMediaList />
         ) : (
-            <SeriesListPreview series={USSeries.slice(0, 100)} title="Tout droit des États-Unis" />
+            <MediaListPreview medias={USSeries.slice(0, 100)} type="serie" title="Tout droit des États-Unis" />
         )}
         {loadingFrench ? (
-            <LoadingMovieList />
+            <LoadingMediaList />
         ) : (
-            <SeriesListPreview series={frenchSeries.slice(0, 100)} title="Séries françaises" />
+            <MediaListPreview medias={frenchSeries.slice(0, 100)} type="serie" title="Séries françaises" />
         )}
       </section>
     </div>
