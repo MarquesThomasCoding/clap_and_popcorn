@@ -55,7 +55,7 @@ export default function Page({
                     </p>
                 </div>
             </div>
-            <MediaListPreview medias={actor.movie_credits.cast} title="Connu pour" />
+            <MediaListPreview medias={actor.movie_credits.cast} type="movie" title="Connu pour" />
 
             <div id="biography" className="hidden fixed inset-0 bg-black bg-opacity-50 z-10 flex justify-center items-center" onClick={() => showBiography()}>
                 <span className="flex flex-col gap-2 w-1/2 h-1/2 overflow-y-auto rounded-md bg-zinc-900 p-8">
