@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, JSX } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -16,19 +16,19 @@ import useAuth from "@/hooks/useAuth";
 import SignIn from "@/components/SignIn";
 import SignUp from "@/components/SignUp";
 
-export default function Page() {
+export default function Page(): JSX.Element {
   const [user, setUser] = useState<User | null>(null);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [isSignUp, setIsSignUp] = useState<boolean>(false);
 
   const router = useRouter();
 
   useAuth();
 
-  const handleGoogleSignIn = async () => {
-    const provider = new GoogleAuthProvider();
+  const handleGoogleSignIn = async (): Promise<void> => {
+    const provider: GoogleAuthProvider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
       setUser(result.user);
@@ -48,7 +48,7 @@ export default function Page() {
     }
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -59,7 +59,7 @@ export default function Page() {
     }
   };
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     try {
       const userCredential = await createUserWithEmailAndPassword(

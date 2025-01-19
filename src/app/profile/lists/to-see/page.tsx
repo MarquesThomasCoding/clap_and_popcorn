@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import { getToSeeMovies } from "@/lib/utils";
@@ -8,10 +8,10 @@ import { Movie } from "@/types/types";
 import LoadingMediaList from "@/components/LoadingMediaList";
 import MediaListPreview from "@/components/MediaListPreview";
 
-const ToSeePage = () => {
+const ToSeePage = (): JSX.Element => {
   const { user, loading } = useAuth();
   const [toSeeMovies, setToSeeMovies] = useState<Movie[]>([]);
-  const [pageLoading, setPageLoading] = useState(true);
+  const [pageLoading, setPageLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -23,9 +23,9 @@ const ToSeePage = () => {
     if (!user) {
       router.push("/signin");
     } else {
-      const fetchMovies = async () => {
+      const fetchMovies = async (): Promise<void> => {
         if (user.uid) {
-          const toSeeMovies = await getToSeeMovies(user.uid);
+          const toSeeMovies: Movie[] = await getToSeeMovies(user.uid);
           setToSeeMovies(toSeeMovies);
           setPageLoading(false);
         }
@@ -41,7 +41,7 @@ const ToSeePage = () => {
 
   return (
     <section className="m-20 flex flex-col gap-16">
-      <MediaListPreview medias={toSeeMovies} title="My To See Movies" grid />
+      <MediaListPreview medias={toSeeMovies} type="movie" title="My To See Movies" grid />
     </section>
   );
 };

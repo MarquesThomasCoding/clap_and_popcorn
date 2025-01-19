@@ -15,19 +15,20 @@ import { useToast } from "@/hooks/use-toast";
 import useAuth from "@/hooks/useAuth";
 import { getToSeeMovies, getSeenMovies, updateDisplayName } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import MediaListPreview from "@/components/MediaListPreview";
 import { Edit2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Movie } from "@/types/types";
 
-export default function Page() {
+export default function Page(): JSX.Element {
   const { user, loading } = useAuth();
-  const [toSeeMovies, setToSeeMovies] = useState([]);
-  const [seenMovies, setSeenMovies] = useState([]);
-  const [pageLoading, setPageLoading] = useState(true);
-  const [newUsername, setNewUsername] = useState("");
+  const [toSeeMovies, setToSeeMovies] = useState<Movie[]>([]);
+  const [seenMovies, setSeenMovies] = useState<Movie[]>([]);
+  const [pageLoading, setPageLoading] = useState<boolean>(true);
+  const [newUsername, setNewUsername] = useState<string>("");
   const router = useRouter();
   const { toast } = useToast();
 
@@ -40,10 +41,10 @@ export default function Page() {
       router.push("/signin");
     } else {
       setNewUsername(user.displayName || "");
-      const fetchMovies = async () => {
+      const fetchMovies = async (): Promise<void> => {
         if (user.uid) {
-          const toSeeMovies = await getToSeeMovies(user.uid);
-          const seenMovies = await getSeenMovies(user.uid);
+          const toSeeMovies: Movie[] = await getToSeeMovies(user.uid);
+          const seenMovies: Movie[] = await getSeenMovies(user.uid);
           setToSeeMovies(toSeeMovies.slice(0, 10));
           setSeenMovies(seenMovies.slice(0, 10));
           setPageLoading(false);
@@ -54,7 +55,7 @@ export default function Page() {
     }
   }, [user, loading, router]);
 
-  const handleUpdateUsername = async () => {
+  const handleUpdateUsername = async (): Promise<void> => {
     if (newUsername.trim() === "") return;
     if (user) {
       await updateDisplayName(newUsername)
@@ -125,8 +126,8 @@ export default function Page() {
             </DialogContent>
           </Dialog>
         </h1>
-        <MediaListPreview medias={toSeeMovies} title="Mes films à voir" href="/profile/lists/to-see" seeMore />
-        <MediaListPreview medias={seenMovies} title="Mes films vus" href="/profile/lists/seen" seeMore />
+        <MediaListPreview medias={toSeeMovies} type="movie" title="Mes films à voir" href="/profile/lists/to-see" seeMore />
+        <MediaListPreview medias={seenMovies} type="movie" title="Mes films vus" href="/profile/lists/seen" seeMore />
       </section>
     </div>
   );

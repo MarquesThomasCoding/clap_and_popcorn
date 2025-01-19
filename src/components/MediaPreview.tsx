@@ -1,8 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Movie, Serie } from "@/types/types";
+import { JSX } from "react";
 
-export default function MediaPreview({ media, type }: { media: Movie | Serie; type: "movie" | "serie" }) {
+export default function MediaPreview({
+  media,
+  type,
+}: {
+  media: Movie | Serie;
+  type: "movie" | "serie";
+}): JSX.Element {
   return (
     <Link
       href={`/${type === "movie" ? "movies" : "tv"}/${media.id}`}
@@ -11,18 +18,18 @@ export default function MediaPreview({ media, type }: { media: Movie | Serie; ty
       {media.poster_path && (
         <Image
           src={`https://image.tmdb.org/t/p/w500/${media.poster_path}`}
-          alt={media.title}
+          alt={type === 'movie' ? (media as Movie).title : (media as Serie).name}
           width={500}
           height={500}
           className="w-full h-auto"
         />
       )}
       <div className="absolute h-full w-full bottom-0 bg-black bg-opacity-50 opacity-0 translate-y-full group-hover:opacity-100 group-hover:translate-y-0 flex flex-col justify-end p-4 transition-all duration-500">
-        <h2 className="text-lg font-semibold">{media.title}</h2>
+        <h2 className="text-lg font-semibold">{type === 'movie' ? (media as Movie).title : (media as Serie).name}</h2>
         <p>
-          {isNaN(new Date(media.release_date).getTime())
+          {isNaN(new Date((type === 'movie' ? (media as Movie).release_date : (media as Serie).first_air_date)).getTime())
             ? ""
-            : new Date(media.release_date).toLocaleDateString("fr-FR")}
+            : new Date((type === 'movie' ? (media as Movie).release_date : (media as Serie).first_air_date)).toLocaleDateString("fr-FR")}
         </p>
         <div className="flex items-center mt-2">
           {Array.from({ length: 5 }, (_, index) => (

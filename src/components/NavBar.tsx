@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
 import {
@@ -24,27 +24,25 @@ import SearchBar from "@/components/SearchBar";
 import useAuth from "@/hooks/useAuth";
 
 export const NavBar: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(true);
-  const lastScrollTop = React.useRef(0);
+  const [isVisible, setIsVisible] = useState<boolean>(true);
+  const lastScrollTop = useRef<number>(0);
 
   const { user, loading } = useAuth();
 
   useEffect(() => {
-      if (loading) {
-        return;
-      }
-    }, [user, loading]);
+    if (loading) {
+      return;
+    }
+  }, [user, loading]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop =
-        window.pageYOffset || document.documentElement.scrollTop;
+    const handleScroll = (): void => {
+      const scrollTop: number =
+        window.scrollY || document.documentElement.scrollTop;
 
       if (scrollTop > lastScrollTop.current) {
-        // Scroll vers le bas
         setIsVisible(false);
       } else {
-        // Scroll vers le haut
         setIsVisible(true);
       }
 
@@ -55,7 +53,7 @@ export const NavBar: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleLogout = async () => {
+  const handleLogout = async (): Promise<void> => {
     try {
       await signOut(auth);
     } catch (error) {
@@ -113,31 +111,39 @@ export const NavBar: React.FC = () => {
       </NavigationMenuList>
       <NavigationMenuList>
         <NavigationMenuItem>
-            {user ? (
+          {user ? (
             <DropdownMenu>
-                <DropdownMenuTrigger>{user.displayName}</DropdownMenuTrigger>
-                <DropdownMenuContent>
-                    <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem><Link href="/profile">Profil</Link></DropdownMenuItem>
-                    <DropdownMenuItem><Link href="/profile/lists/to-see">Mes films à voir</Link></DropdownMenuItem>
-                    <DropdownMenuItem><Link href="/profile/lists/seen">Déjà vu</Link></DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout}>Me déconnecter</DropdownMenuItem>
-                </DropdownMenuContent>
+              <DropdownMenuTrigger>{user.displayName}</DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Link href="/profile">Profil</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/profile/lists/to-see">Mes films à voir</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href="/profile/lists/seen">Déjà vu</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                  Me déconnecter
+                </DropdownMenuItem>
+              </DropdownMenuContent>
             </DropdownMenu>
-            ) :
+          ) : (
             <Link href="/signin" legacyBehavior passHref>
-                <NavigationMenuLink
-                    className={
-                    navigationMenuTriggerStyle() +
-                    " bg-transparent hover:bg-transparent"
-                    }
-                >
-                    Se connecter
-                </NavigationMenuLink>
+              <NavigationMenuLink
+                className={
+                  navigationMenuTriggerStyle() +
+                  " bg-transparent hover:bg-transparent"
+                }
+              >
+                Se connecter
+              </NavigationMenuLink>
             </Link>
-            }
+          )}
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

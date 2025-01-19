@@ -1,4 +1,6 @@
-export default function LoadingBanner() {
+import { JSX } from "react";
+
+export default function LoadingBanner(): JSX.Element {
   return (
     <div className="flex flex-col justify-end h-screen p-8 mx-20 mb-140">
       <div className="animate-pulse flex flex-col gap-8">

@@ -7,7 +7,7 @@ import { Movie, Serie } from "@/types/types";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
 import { addToSeeMedia } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 
 interface MediaBannerProps {
   media: Movie | Serie;
@@ -15,8 +15,14 @@ interface MediaBannerProps {
   type: "movie" | "serie";
 }
 
-export default function MediaBanner({ media, isMediaPage, type }: MediaBannerProps) {
+export default function MediaBanner({
+  media,
+  isMediaPage,
+  type,
+}: MediaBannerProps): JSX.Element {
   const [user, setUser] = useState<User | null>(null);
+  const [showOverview, setShowOverview] = useState<boolean>(false);
+  const [showTeaser, setShowTeaser] = useState<boolean>(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -26,17 +32,12 @@ export default function MediaBanner({ media, isMediaPage, type }: MediaBannerPro
     return () => unsubscribe();
   }, []);
 
-  const showTeaser = () => {
-    const teaser = document.querySelector("#teaser-container");
-    if (teaser) {
-      document.querySelector("#teaser-container")?.classList.remove("hidden");
-      document.body.classList.add("overflow-hidden");
-    }
+  const handleShowTeaser: () => void = () => {
+    setShowTeaser(!showTeaser);
   };
 
-  const showOverview = () => {
-    const overview = document.getElementById("overview");
-    overview?.classList.toggle("hidden");
+  const handleShowOverview = () => {
+    setShowOverview(true);
   };
 
   const handleAddToSeeMedia = () => {
@@ -63,11 +64,11 @@ export default function MediaBanner({ media, isMediaPage, type }: MediaBannerPro
         }`}
         style={{ background: "linear-gradient(360deg, black, transparent)" }}
       >
-        <h2 className="text-6xl font-bold mx-20 mb-2">{media.title}</h2>
+        <h2 className="text-6xl font-bold mx-20 mb-2">{type === 'movie' ? (media as Movie).title : (media as Serie).name}</h2>
         <p className="mx-20 text-lg max-w-96">
           {media.overview.slice(0, 300)}...
           <button
-            onClick={() => showOverview()}
+            onClick={() => handleShowOverview()}
             className="text-white underline"
           >
             Voir plus
@@ -75,7 +76,7 @@ export default function MediaBanner({ media, isMediaPage, type }: MediaBannerPro
         </p>
         <div className="flex gap-4 mx-20">
           <button
-            onClick={() => isMediaPage && showTeaser()}
+            onClick={() => isMediaPage && handleShowTeaser()}
             className={
               "flex items-center gap-2 rounded-lg px-8 py-3 bg-[#F7CC23] text-black"
             }
@@ -85,7 +86,9 @@ export default function MediaBanner({ media, isMediaPage, type }: MediaBannerPro
           </button>
           {!isMediaPage && (
             <Link
-              href={`${type === "movie" ? "movies/" + media.id : "tv/" + media.id}`}
+              href={`${
+                type === "movie" ? "movies/" + media.id : "tv/" + media.id
+              }`}
               className={
                 "flex items-center gap-2 rounded-lg px-8 py-3 bg-white bg-opacity-30 backdrop-blur-sm"
               }
@@ -119,14 +122,15 @@ export default function MediaBanner({ media, isMediaPage, type }: MediaBannerPro
               ))}
               {type === "movie" && (
                 <span className="ml-4">
-                    {Math.floor((media as Movie).runtime / 60)}h {(media as Movie).runtime % 60}min
+                  {Math.floor((media as Movie).runtime / 60)}h{" "}
+                  {(media as Movie).runtime % 60}min
                 </span>
               )}
             </div>
             <div className="flex gap-2 mx-20">
               <span className="rounded-sm px-2 bg-black bg-opacity-30 backdrop-blur-sm">
                 {"le " +
-                  new Date(media.release_date).toLocaleDateString("fr-FR", {
+                  new Date((type === 'movie' ? (media as Movie).release_date : (media as Serie).first_air_date)).toLocaleDateString("fr-FR", {
                     day: "2-digit",
                     month: "long",
                     year: "numeric",
@@ -158,18 +162,32 @@ export default function MediaBanner({ media, isMediaPage, type }: MediaBannerPro
             </div>
             {media.videos.results.filter(
               (video: { type: string }) => video.type === "Trailer"
-            )[0] && (
-              <TeaserPlayer
-                videoId={
-                  media.videos.results.filter(
-                    (video: { type: string }) => video.type === "Trailer"
-                  )[0].key
-                }
-              />
-            )}
+            )[0] &&
+              showTeaser && (
+                <TeaserPlayer
+                  videoId={
+                    media.videos.results.filter(
+                      (video: { type: string }) => video.type === "Trailer"
+                    )[0].key
+                  }
+                />
+              )}
           </>
         )}
       </div>
+      {showOverview && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-10 flex justify-center items-center"
+          onClick={() => handleShowOverview()}
+        >
+          <span className="flex flex-col gap-2 w-1/2 h-1/2 overflow-y-auto rounded-md bg-zinc-900 p-8">
+            <h4 className="text-xl font-bold border-b border-zinc-400 p-2">
+              Synopsis
+            </h4>
+            {media.overview}
+          </span>
+        </div>
+      )}
     </div>
   );
 }

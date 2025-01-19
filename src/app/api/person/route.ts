@@ -1,10 +1,11 @@
+import { Person } from '@/types/types';
 import { NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
-    let url = process.env.TMDB_BASE_URL + '/person';
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
-    const query = searchParams.get('query');
+export async function GET(request: Request): Promise<Response> {
+    let url: string = process.env.TMDB_BASE_URL + '/person';
+    const { searchParams }: URL = new URL(request.url);
+    const id: string | null = searchParams.get('id');
+    const query: string | null = searchParams.get('query');
     
     if (id) {
         url += `/${id}?append_to_response=movie_credits`;
@@ -17,7 +18,7 @@ export async function GET(request: Request) {
             'Authorization': `Bearer ${process.env.TMDB_API_KEY}`,
         },
     };
-    const response = await fetch(url+'&language=fr-FR', options);
-    const data = await response.json();
+    const response: Response = await fetch(url+'&language=fr-FR', options);
+    const data: Person = await response.json();
     return NextResponse.json(data);
 }

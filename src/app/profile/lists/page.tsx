@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import { getToSeeMovies, getSeenMovies } from "@/lib/utils";
@@ -8,11 +8,11 @@ import { Movie } from "@/types/types";
 import LoadingMediaList from "@/components/LoadingMediaList";
 import MediaListPreview from "@/components/MediaListPreview";
 
-const ListsPage = () => {
+const ListsPage = (): JSX.Element => {
   const { user, loading } = useAuth();
   const [toSeeMovies, setToSeeMovies] = useState<Movie[]>([]);
   const [seenMovies, setSeenMovies] = useState<Movie[]>([]);
-  const [pageLoading, setPageLoading] = useState(true);
+  const [pageLoading, setPageLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -24,10 +24,10 @@ const ListsPage = () => {
     if (!user) {
       router.push("/signin");
     } else {
-      const fetchMovies = async () => {
+      const fetchMovies = async (): Promise<void> => {
         if (user.uid) {
-          const toSeeMovies = await getToSeeMovies(user.uid, 10);
-          const seenMovies = await getSeenMovies(user.uid, 10);
+          const toSeeMovies: Movie[] = await getToSeeMovies(user.uid, 10);
+          const seenMovies: Movie[] = await getSeenMovies(user.uid, 10);
           setToSeeMovies(toSeeMovies);
           setSeenMovies(seenMovies);
           setPageLoading(false);
@@ -44,8 +44,8 @@ const ListsPage = () => {
 
   return (
     <section className="m-20 flex flex-col gap-16">
-      <MediaListPreview medias={toSeeMovies} title="My To See Movies" seeMore href="/profile/lists/to-see" />
-      <MediaListPreview medias={seenMovies} title="My Seen Movies" seeMore href="/profile/lists/seen" />
+      <MediaListPreview medias={toSeeMovies} type="movie" title="My To See Movies" seeMore href="/profile/lists/to-see" />
+      <MediaListPreview medias={seenMovies} type="movie" title="My Seen Movies" seeMore href="/profile/lists/seen" />
     </section>
   );
 };

@@ -12,55 +12,44 @@ export default function Home() {
   const [frenchSeries, setFrenchSeries] = useState<Serie[]>([]);
   const [topRatedSeries, setTopRatedSeries] = useState<Serie[]>([]);
   const [popularSeries, setPopularSeries] = useState<Serie[]>([]);
-  const [loadingUS, setLoadingUS] = useState(true);
-  const [loadingFrench, setLoadingFrench] = useState(true);
-  const [loadingTopRated, setLoadingTopRated] = useState(true);
-  const [loadingPopular, setLoadingPopular] = useState(true);
+  const [loadingUS, setLoadingUS] = useState<boolean>(true);
+  const [loadingFrench, setLoadingFrench] = useState<boolean>(true);
+  const [loadingTopRated, setLoadingTopRated] = useState<boolean>(true);
+  const [loadingPopular, setLoadingPopular] = useState<boolean>(true);
 
   useEffect(() => {
-    fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/tv?origin_country=US")
-      .then((response) => response.json())
-      .then((data) => {
-        setUSSeries(data.results.map((serie: Serie) => {
-          serie.title = serie.name;
-          serie.release_date = serie.first_air_date;
-          return serie;
-        }));
-        setLoadingUS(false);
-      });
-
-    fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/tv?origin_country=FR")
-      .then((response) => response.json())
-      .then((data) => {
-        setFrenchSeries(data.results.map((serie: Serie) => {
-          serie.title = serie.name;
-          serie.release_date = serie.first_air_date;
-          return serie;
-        }));
-        setLoadingFrench(false);
-      });
+    const fetchUSSeries = async (): Promise<void> => {
+      const response: Response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/tv?origin_country=US");
+      const data: { results: Serie[] } = await response.json();
+      setUSSeries(data.results);
+      setLoadingUS(false);
+    };
+    
+    const fetchFrenchSeries = async (): Promise<void> => {
+      const response: Response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/tv?origin_country=FR");
+      const data: { results: Serie[] } = await response.json();
+      setFrenchSeries(data.results);
+      setLoadingFrench(false);
+    };
       
-    fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/tv?query=top_rated")
-    .then((response) => response.json())
-    .then((data) => {
-        setTopRatedSeries(data.results.map((serie: Serie) => {
-          serie.title = serie.name;
-          serie.release_date = serie.first_air_date;
-          return serie;
-        }));
-        setLoadingTopRated(false);
-      });
+    const fetchTopRatedSeries = async (): Promise<void> => {
+      const response: Response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/tv?query=top_rated");
+      const data: { results: Serie[] } = await response.json();
+      setTopRatedSeries(data.results);
+      setLoadingTopRated(false);
+    };
 
-    fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/tv?query=popular")
-    .then((response) => response.json())
-    .then((data) => {
-        setPopularSeries(data.results.map((serie: Serie) => {
-          serie.title = serie.name;
-          serie.release_date = serie.first_air_date;
-          return serie;
-        }));
-        setLoadingPopular(false);
-      });
+    const fetchPopularSeries = async (): Promise<void> => {
+      const response: Response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/tv?query=popular");
+      const data: { results: Serie[] } = await response.json();
+      setPopularSeries(data.results);
+      setLoadingPopular(false);
+    };
+
+    fetchUSSeries();
+    fetchFrenchSeries();
+    fetchTopRatedSeries();
+    fetchPopularSeries();
   }, []);
 
   return (

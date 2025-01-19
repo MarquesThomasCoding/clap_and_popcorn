@@ -14,39 +14,44 @@ export default function Home() {
   const [trendingMovies, setTrendingMovies] = useState<Movie[]>([]);
   const [trendingTV, setTrendingTV] = useState<Serie[]>([]);
   const [trendingPersons, setTrendingPersons] = useState<Person[]>([]);
-  const [loadingTrendingAll, setLoadingTrendingAll] = useState(true);
-  const [loadingTrendingMovies, setLoadingTrendingMovies] = useState(true);
-  const [loadingTrendingTV, setLoadingTrendingTV] = useState(true);
-  const [loadingTrendingPersons, setLoadingTrendingPersons] = useState(true);
+  const [loadingTrendingAll, setLoadingTrendingAll] = useState<boolean>(true);
+  const [loadingTrendingMovies, setLoadingTrendingMovies] = useState<boolean>(true);
+  const [loadingTrendingTV, setLoadingTrendingTV] = useState<boolean>(true);
+  const [loadingTrendingPersons, setLoadingTrendingPersons] = useState<boolean>(true);
 
   useEffect(() => {
-    fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/trending?type=all")
-    .then((response) => response.json())
-    .then((data) => {
+    const fetchTrendingAll = async (): Promise<void> => {
+      const response: Response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/trending?type=all");
+      const data: { results: (Movie | Serie | Person)[] } = await response.json();
       setTrendingAll(data.results);
       setLoadingTrendingAll(false);
-    });
+    };
       
-    fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/trending?type=movie")
-    .then((response) => response.json())
-    .then((data) => {
+    const fetchTrendingMovies = async (): Promise<void> => {
+      const response: Response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/trending?type=movie");
+      const data: { results: Movie[] } = await response.json();
       setTrendingMovies(data.results);
       setLoadingTrendingMovies(false);
-    });
+    };
 
-    fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/trending?type=tv")
-    .then((response) => response.json())
-    .then((data) => {
+    const fetchTrendingTV = async (): Promise<void> => {
+      const response: Response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/trending?type=tv");
+      const data: { results: Serie[] } = await response.json();
       setTrendingTV(data.results);
       setLoadingTrendingTV(false);
-    });
+    };
 
-    fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/person?query=popular")
-    .then((response) => response.json())
-    .then((data) => {
+    const fetchTrendingPersons = async (): Promise<void> => {
+      const response: Response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/person?query=popular");
+      const data: { results: Person[] } = await response.json();
       setTrendingPersons(data.results);
       setLoadingTrendingPersons(false);
-    });
+    };
+    
+    fetchTrendingAll();
+    fetchTrendingMovies();
+    fetchTrendingTV();
+    fetchTrendingPersons();
   }, []);
 
   return (

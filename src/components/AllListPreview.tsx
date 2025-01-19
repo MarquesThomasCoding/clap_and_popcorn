@@ -1,10 +1,11 @@
 import { Movie, Serie, Person } from '@/types/types';
 import MediaPreview from './MediaPreview';
 import PersonPreview from './PersonPreview';
+import { JSX } from 'react';
 
 export default function AllListPreview(
     { elements, title }: Readonly<{ elements: (Movie | Serie | Person)[], title: string }>
-) {
+): JSX.Element {
     return (
         <div className="flex flex-col gap-4">
             <h1 className="text-3xl font-bold z-[1]">{title}</h1>
