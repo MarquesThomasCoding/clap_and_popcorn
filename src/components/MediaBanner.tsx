@@ -64,7 +64,9 @@ export default function MediaBanner({
         }`}
         style={{ background: "linear-gradient(360deg, black, transparent)" }}
       >
-        <h2 className="text-6xl font-bold mx-20 mb-2">{type === 'movie' ? (media as Movie).title : (media as Serie).name}</h2>
+        <h2 className="text-6xl font-bold mx-20 mb-2">
+          {type === "movie" ? (media as Movie).title : (media as Serie).name}
+        </h2>
         <p className="mx-20 text-lg max-w-96">
           {media.overview.slice(0, 300)}...
           <button
@@ -75,15 +77,17 @@ export default function MediaBanner({
           </button>
         </p>
         <div className="flex gap-4 mx-20">
-          <button
-            onClick={() => isMediaPage && handleShowTeaser()}
-            className={
-              "flex items-center gap-2 rounded-lg px-8 py-3 bg-[#F7CC23] text-black"
-            }
-          >
-            <Play />
-            Bande annonce
-          </button>
+          {isMediaPage && (
+            <button
+              onClick={() => handleShowTeaser()}
+              className={
+                "flex items-center gap-2 rounded-lg px-8 py-3 bg-[#F7CC23] text-black"
+              }
+            >
+              <Play />
+              Bande annonce
+            </button>
+          )}
           {!isMediaPage && (
             <Link
               href={`${
@@ -130,7 +134,11 @@ export default function MediaBanner({
             <div className="flex gap-2 mx-20">
               <span className="rounded-sm px-2 bg-black bg-opacity-30 backdrop-blur-sm">
                 {"le " +
-                  new Date((type === 'movie' ? (media as Movie).release_date : (media as Serie).first_air_date)).toLocaleDateString("fr-FR", {
+                  new Date(
+                    type === "movie"
+                      ? (media as Movie).release_date
+                      : (media as Serie).first_air_date
+                  ).toLocaleDateString("fr-FR", {
                     day: "2-digit",
                     month: "long",
                     year: "numeric",
