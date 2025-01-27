@@ -26,8 +26,8 @@ const ListsPage = (): JSX.Element => {
     } else {
       const fetchMovies = async (): Promise<void> => {
         if (user.uid) {
-          const toSeeMovies: Movie[] = await getToSeeMovies(user.uid, 10);
-          const seenMovies: Movie[] = await getSeenMovies(user.uid, 10);
+          const toSeeMovies: Movie[] = await getToSeeMovies(10);
+          const seenMovies: Movie[] = await getSeenMovies(10);
           setToSeeMovies(toSeeMovies);
           setSeenMovies(seenMovies);
           setPageLoading(false);
