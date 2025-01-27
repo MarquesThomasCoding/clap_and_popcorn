@@ -3,7 +3,7 @@
 import { JSX, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
-import { getSeenMovies } from "@/lib/utils";
+import { getSeenMovies, getSeenSeries } from "@/lib/utils";
 import { Movie } from "@/types/types";
 import LoadingMediaList from "@/components/LoadingMediaList";
 import MediaListPreview from "@/components/MediaListPreview";
@@ -11,6 +11,7 @@ import MediaListPreview from "@/components/MediaListPreview";
 const SeenPage = (): JSX.Element => {
   const { user, loading } = useAuth();
   const [seenMovies, setSeenMovies] = useState<Movie[]>([]);
+  const [seenSeries, setSeenSeries] = useState<Movie[]>([]);
   const [pageLoading, setPageLoading] = useState<boolean>(true);
   const router = useRouter();
 
@@ -25,8 +26,10 @@ const SeenPage = (): JSX.Element => {
     } else {
       const fetchMovies = async (): Promise<void> => {
         if (user.uid) {
-          const seenMovies: Movie[] = await getSeenMovies(user.uid);
+          const seenMovies: Movie[] = await getSeenMovies();
+          const seenSeries: Movie[] = await getSeenSeries();
           setSeenMovies(seenMovies);
+          setSeenSeries(seenSeries);
           setPageLoading(false);
         }
       };
@@ -41,7 +44,8 @@ const SeenPage = (): JSX.Element => {
 
   return (
     <section className="m-20 flex flex-col gap-16">
-      <MediaListPreview medias={seenMovies} type="movie" title="My Seen Movies" grid />
+      <MediaListPreview medias={seenMovies} type="movie" title="Les films que j'ai vu" grid />
+      <MediaListPreview medias={seenSeries} type="serie" title="Les séries que j'ai vu" grid />
     </section>
   );
 };

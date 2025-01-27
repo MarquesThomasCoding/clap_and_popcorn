@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import useAuth from "@/hooks/useAuth";
-import { getToSeeMovies, getSeenMovies, updateDisplayName } from "@/lib/utils";
+import { getToSeeMovies, getSeenMovies, getToSeeSeries, getSeenSeries, updateDisplayName } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { JSX, useEffect, useState } from "react";
 import MediaListPreview from "@/components/MediaListPreview";
@@ -21,12 +21,14 @@ import { Edit2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Movie } from "@/types/types";
+import { Movie, Serie } from "@/types/types";
 
 export default function Page(): JSX.Element {
   const { user, loading } = useAuth();
   const [toSeeMovies, setToSeeMovies] = useState<Movie[]>([]);
   const [seenMovies, setSeenMovies] = useState<Movie[]>([]);
+  const [toSeeSeries, setToSeeSeries] = useState<Serie[]>([]);
+  const [seenSeries, setSeenSeries] = useState<Serie[]>([]);
   const [pageLoading, setPageLoading] = useState<boolean>(true);
   const [newUsername, setNewUsername] = useState<string>("");
   const router = useRouter();
@@ -41,17 +43,21 @@ export default function Page(): JSX.Element {
       router.push("/signin");
     } else {
       setNewUsername(user.displayName || "");
-      const fetchMovies = async (): Promise<void> => {
+      const fetchMedias = async (): Promise<void> => {
         if (user.uid) {
-          const toSeeMovies: Movie[] = await getToSeeMovies(user.uid);
-          const seenMovies: Movie[] = await getSeenMovies(user.uid);
+          const toSeeMovies: Movie[] = await getToSeeMovies();
+          const seenMovies: Movie[] = await getSeenMovies();
+          const toSeeSeries: Serie[] = await getToSeeSeries();
+          const seenSeries: Serie[] = await getSeenSeries();
           setToSeeMovies(toSeeMovies.slice(0, 10));
           setSeenMovies(seenMovies.slice(0, 10));
+          setToSeeSeries(toSeeSeries.slice(0, 10));
+          setSeenSeries(seenSeries.slice(0, 10));
           setPageLoading(false);
         }
       };
 
-      fetchMovies();
+      fetchMedias();
     }
   }, [user, loading, router]);
 
@@ -128,6 +134,8 @@ export default function Page(): JSX.Element {
         </h1>
         <MediaListPreview medias={toSeeMovies} type="movie" title="Mes films à voir" href="/profile/lists/to-see" seeMore />
         <MediaListPreview medias={seenMovies} type="movie" title="Mes films vus" href="/profile/lists/seen" seeMore />
+        <MediaListPreview medias={toSeeSeries} type="serie" title="Mes séries à voir" href="/profile/lists/to-see" seeMore />
+        <MediaListPreview medias={seenSeries} type="serie" title="Mes séries vues" href="/profile/lists/seen" seeMore />
       </section>
     </div>
   );
