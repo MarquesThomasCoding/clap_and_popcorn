@@ -121,7 +121,7 @@ export const NavBar: React.FC = () => {
                   <Link href="/profile">Profil</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/profile/lists/to-see">Mes films à voir</Link>
+                  <Link href="/profile/lists/to-see">À voir</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Link href="/profile/lists/seen">Déjà vu</Link>
