@@ -1,4 +1,4 @@
-import { Crew, Movie, Person } from "@/types/types";
+import { Crew, Movie, Person, Serie } from "@/types/types";
 
 // MOVIE
 
@@ -62,3 +62,27 @@ export async function fetchActor(id: string): Promise<Person> {
   const actorData: Person = await actorResponse.json();
   return actorData;
 }
+
+export const fetchTrendingAll = async (): Promise<(Movie | Serie | Person)[]> => {
+  const response: Response = await fetch(
+    process.env.NEXT_PUBLIC_API_BASE_URL + "/trending?type=all"
+  );
+  const data: { results: (Movie | Serie | Person)[] } = await response.json();
+  return data.results;
+};
+
+export const fetchTrendingTV = async (): Promise<Serie[]> => {
+  const response: Response = await fetch(
+    process.env.NEXT_PUBLIC_API_BASE_URL + "/trending?type=tv"
+  );
+  const data: { results: Serie[] } = await response.json();
+  return data.results;
+};
+
+export const fetchTrendingPersons = async (): Promise<Person[]> => {
+  const response: Response = await fetch(
+    process.env.NEXT_PUBLIC_API_BASE_URL + "/person?query=popular"
+  );
+  const data: { results: Person[] } = await response.json();
+  return data.results;
+};

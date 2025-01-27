@@ -8,6 +8,7 @@ import PersonsListPreview from "@/components/PersonsListPreview";
 import LoadingBanner from "@/components/LoadingBanner";
 import { Movie, Serie, Person } from "@/types/types";
 import LoadingMediaList from "@/components/LoadingMediaList";
+import { fetchTrendingAll, fetchTrendingMovies, fetchTrendingPersons, fetchTrendingTV } from "@/lib/fetchData";
 
 export default function Home() {
   const [trendingAll, setTrendingAll] = useState<(Movie | Serie | Person)[]>([]);
@@ -20,38 +21,34 @@ export default function Home() {
   const [loadingTrendingPersons, setLoadingTrendingPersons] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchTrendingAll = async (): Promise<void> => {
-      const response: Response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/trending?type=all");
-      const data: { results: (Movie | Serie | Person)[] } = await response.json();
-      setTrendingAll(data.results);
+    const getTrendingAll = async (): Promise<void> => {
+      const data: (Movie | Serie | Person)[] = await fetchTrendingAll();
+      setTrendingAll(data);
       setLoadingTrendingAll(false);
     };
       
-    const fetchTrendingMovies = async (): Promise<void> => {
-      const response: Response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/trending?type=movie");
-      const data: { results: Movie[] } = await response.json();
-      setTrendingMovies(data.results);
+    const getTrendingMovies = async (): Promise<void> => {
+      const data: Movie[] = await fetchTrendingMovies();
+      setTrendingMovies(data);
       setLoadingTrendingMovies(false);
-    };
+    }
 
-    const fetchTrendingTV = async (): Promise<void> => {
-      const response: Response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/trending?type=tv");
-      const data: { results: Serie[] } = await response.json();
-      setTrendingTV(data.results);
+    const getTrendingTV = async (): Promise<void> => {
+      const data: Serie[] = await fetchTrendingTV();
+      setTrendingTV(data);
       setLoadingTrendingTV(false);
     };
 
-    const fetchTrendingPersons = async (): Promise<void> => {
-      const response: Response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL+"/person?query=popular");
-      const data: { results: Person[] } = await response.json();
-      setTrendingPersons(data.results);
+    const getTrendingPersons = async (): Promise<void> => {
+      const data: Person[] = await fetchTrendingPersons();
+      setTrendingPersons(data);
       setLoadingTrendingPersons(false);
     };
     
-    fetchTrendingAll();
-    fetchTrendingMovies();
-    fetchTrendingTV();
-    fetchTrendingPersons();
+    getTrendingAll();
+    getTrendingMovies();
+    getTrendingTV();
+    getTrendingPersons();
   }, []);
 
   return (
