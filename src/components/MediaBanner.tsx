@@ -37,7 +37,7 @@ export default function MediaBanner({
   };
 
   const handleShowOverview = () => {
-    setShowOverview(true);
+    setShowOverview(!showOverview);
   };
 
   const handleAddToSeeMedia = () => {
