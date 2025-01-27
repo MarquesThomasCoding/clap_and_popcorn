@@ -34,16 +34,20 @@ export default function Page(): JSX.Element {
       setUser(result.user);
       const userDocRef = doc(db, "users", result.user.uid);
       const userDoc = await getDoc(userDocRef);
-      if (!userDoc.exists) {
+      if (!userDoc.exists()) {
         await setDoc(userDocRef, {
+          uid: result.user.uid,
           email: result.user.email,
           displayName: result.user.displayName,
           seen_movies: [],
           to_see_movies: [],
+          seen_series: [],
+          to_see_series: [],
         });
       }
       router.push("/");
     } catch (error) {
+      console.error("Error during Google sign-in:", error);
       setError((error as Error).message);
     }
   };
@@ -69,10 +73,13 @@ export default function Page(): JSX.Element {
       );
       const user = userCredential.user;
       await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
         email: user.email,
         displayName: user.displayName,
         seen_movies: [],
         to_see_movies: [],
+        seen_series: [],
+        to_see_series: [],
       });
       setUser(user);
       router.push("/");
