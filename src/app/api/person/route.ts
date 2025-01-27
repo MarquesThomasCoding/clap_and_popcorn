@@ -13,6 +13,9 @@ export async function GET(request: Request): Promise<Response> {
     else if(query) {
         url += `/${query}?append_to_response=movie_credits`;
     }
+    else {
+        url = `${process.env.TMDB_BASE_URL}/person/popular?sort_by=popularity.desc`;
+    }
     const options = {
         headers: {
             'Authorization': `Bearer ${process.env.TMDB_API_KEY}`,

@@ -19,6 +19,9 @@ export async function GET(request: Request) : Promise<Response> {
     else if(origin_country) {
         url = `${process.env.TMDB_BASE_URL}/discover/movie?with_origin_country=${origin_country}`;
     }
+    else {
+        url = `${process.env.TMDB_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+    }
     const options = {
         headers: {
             'Authorization': `Bearer ${process.env.TMDB_API_KEY}`,
