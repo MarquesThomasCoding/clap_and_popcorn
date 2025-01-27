@@ -1,19 +1,11 @@
 import MediaBanner from "@/components/MediaBanner";
 import MediaListPreview from "@/components/MediaListPreview";
 import SeeAndShareButtons from "@/components/SeeAndShareButtons";
+import { fetchSerieById } from "@/lib/fetchData";
 import { Company, Crew, Serie } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
 import { JSX } from "react";
-
-const getSerie = async (slug: string): Promise<Serie> => {
-  const serie: Response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/tv?id=${slug}`
-  );
-  const serieData: Serie = await serie.json();
-
-  return serieData;
-};
 
 export default async function Page({
   params,
@@ -22,7 +14,7 @@ export default async function Page({
 }): Promise<JSX.Element> {
   const slug = (await params).slug;
 
-  const serie: Serie = await getSerie(slug);
+  const serie: Serie = await fetchSerieById(slug);
 
   return (
     <>

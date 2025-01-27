@@ -63,6 +63,16 @@ export async function fetchActor(id: string): Promise<Person> {
   return actorData;
 }
 
+// TV
+
+export async function fetchSerieById(id: string): Promise<Serie> {
+  const serie: Response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/tv?id=${id}`
+  );
+  const serieData: Serie = await serie.json();
+  return serieData;
+}
+
 export const fetchTrendingAll = async (): Promise<(Movie | Serie | Person)[]> => {
   const response: Response = await fetch(
     process.env.NEXT_PUBLIC_API_BASE_URL + "/trending?type=all"
