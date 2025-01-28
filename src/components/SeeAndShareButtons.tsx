@@ -8,6 +8,7 @@ import { Eye, EyeClosed, Share2 } from "lucide-react";
 import { Movie, Serie } from "@/types/types";
 import ShareButtons from "./ShareButtons"; // Import the ShareButtons component
 import { addSeenMedia, checkMediaInSeenList } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SeeAndShareButtons({
   media,
@@ -19,6 +20,7 @@ export default function SeeAndShareButtons({
   const [user, setUser] = useState<User | null>(null);
   const [isSeen, setIsSeen] = useState<boolean>(false);
   const [showShareButtons, setShowShareButtons] = useState<boolean>(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -38,7 +40,22 @@ export default function SeeAndShareButtons({
   }, [user, media.id, type]);
 
   const handleAddSeenMedia = () => {
-    addSeenMedia(media, type);
+    addSeenMedia(media, type).then((data: { success: boolean; message: string }) => {
+      if (data?.success) {
+        toast({
+          title: "Média ajouté",
+          description: `${
+            type === "movie" ? (media as Movie).title : (media as Serie).name
+          } a été ajouté à votre liste`,
+        });
+      } else {
+        toast({
+          title: "Erreur",
+          description: data?.message,
+          variant: "destructive",
+        });
+      }
+    });
     setIsSeen(!isSeen);
   };
 

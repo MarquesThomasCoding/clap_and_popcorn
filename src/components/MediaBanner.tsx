@@ -8,6 +8,7 @@ import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
 import { addToSeeMedia } from "@/lib/utils";
 import { JSX, useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface MediaBannerProps {
   media: Movie | Serie;
@@ -23,6 +24,7 @@ export default function MediaBanner({
   const [user, setUser] = useState<User | null>(null);
   const [showOverview, setShowOverview] = useState<boolean>(false);
   const [showTeaser, setShowTeaser] = useState<boolean>(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -41,7 +43,22 @@ export default function MediaBanner({
   };
 
   const handleAddToSeeMedia = () => {
-    addToSeeMedia(media, type);
+    addToSeeMedia(media, type).then((data: { success: boolean; message: string }) => {
+      if (data?.success) {
+        toast({
+          title: "Média ajouté",
+          description: `${
+            type === "movie" ? (media as Movie).title : (media as Serie).name
+          } a été ajouté à votre liste`,
+        });
+      } else {
+        toast({
+          title: "Erreur",
+          description: data?.message,
+          variant: "destructive",
+        });
+      }
+    });
   };
 
   return (

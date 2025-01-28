@@ -105,7 +105,7 @@ export const checkMediaInSeenList = async (mediaId: number, type: "movie" | "ser
   }
 };
 
-export const addToSeeMedia = (media: Movie | Serie, type: "movie" | "serie") => {
+export const addToSeeMedia = async (media: Movie | Serie, type: "movie" | "serie"): Promise<{ success: boolean; message: string }> => {
   const mediaToSee = <Movie | Serie>{
     id: media.id,
     ...(type === "movie" ? { title: (media as Movie).title } : { name: (media as Serie).name }),
@@ -115,33 +115,28 @@ export const addToSeeMedia = (media: Movie | Serie, type: "movie" | "serie") => 
     overview: media.overview,
   };
 
-  const authUser = getAuthUser();
-  if (authUser) {
+  try {
+    const authUser = getAuthUser();
+    if (!authUser) throw new Error("Utilisateur non connecté");
+    
     const userUid = authUser.uid;
-    if (userUid) {
-      const userRef = getUserRef(userUid);
-      const updateField = type === "movie" ? "to_see_movies" : "to_see_series";
-      updateDoc(userRef, {
-        [updateField]: arrayUnion(mediaToSee),
-      })
-        .then(() => {
-          return { success: true, message: `Film ajouté à la liste 'à voir'` };
-        })
-        .catch((error) => {
-          console.error(`Erreur lors de l'ajout du ${type} à la liste 'à voir' : `, error);
-          return { success: false, message: error };
-        });
-    } else {
-      console.log("Utilisateur non connecté");
-      return { success: false, message: "Utilisateur non connecté" };
-    }
-  } else {
-    console.log("Utilisateur non connecté");
-    return { success: false, message: "Utilisateur non connecté" };
+    if (!userUid) throw new Error("Utilisateur non connecté");
+    
+    const userRef = getUserRef(userUid);
+    const updateField = type === "movie" ? "to_see_movies" : "to_see_series";
+    
+    await updateDoc(userRef, {
+      [updateField]: arrayUnion(mediaToSee),
+    });
+    
+    return { success: true, message: `Média ajouté à la liste 'à voir'` };
+  } catch (error) {
+    console.error(`Erreur lors de l'ajout du ${type} à la liste 'à voir' : `, error);
+    return { success: false, message: (error as Error).message };
   }
 };
 
-export const addSeenMedia = (media: Movie | Serie, type: "movie" | "serie") => {
+export const addSeenMedia = async (media: Movie | Serie, type: "movie" | "serie"): Promise<{ success: boolean; message: string }> => {
   const mediaSeen = <Movie | Serie>{
     id: media.id,
     ...(type === "movie" ? { title: (media as Movie).title } : { name: (media as Serie).name }),
@@ -151,28 +146,23 @@ export const addSeenMedia = (media: Movie | Serie, type: "movie" | "serie") => {
     overview: media.overview,
   };
   
-  const authUser = getAuthUser();
-  if (authUser) {
+  try {
+    const authUser = getAuthUser();
+    if(!authUser) throw new Error("Utilisateur non connecté");
+
     const userUid = authUser.uid;
-    if (userUid) {
-      const userRef = getUserRef(userUid);
-      const updateField = type === "movie" ? "seen_movies" : "seen_series";
-      updateDoc(userRef, {
-        [updateField]: arrayUnion(mediaSeen),
-      })
-        .then(() => {
-          return { success: true, message: `Film ajouté à la liste 'vus'` };
-        })
-        .catch((error) => {
-          console.error(`Erreur lors de l'ajout du ${type} à la liste 'vus' : `, error);
-          return { success: false, message: error };
-        });
-    } else {
-      console.log("Utilisateur non connecté");
-      return { success: false, message: "Utilisateur non connecté" };
-    }
-  } else {
-    console.log("Utilisateur non connecté");
-    return { success: false, message: "Utilisateur non connecté" };
+    if(!userUid) throw new Error("Utilisateur non connecté");
+
+    const userRef = getUserRef(userUid);
+    const updateField = type === "movie" ? "seen_movies" : "seen_series";
+
+    updateDoc(userRef, {
+      [updateField]: arrayUnion(mediaSeen),
+    })
+
+    return { success: true, message: `Média ajouté à la liste 'vus'` };
+  } catch (error) {
+    console.error(`Erreur lors de l'ajout du ${type} à la liste 'vus' : `, error);
+    return { success: false, message: (error as Error).message };
   }
 };
