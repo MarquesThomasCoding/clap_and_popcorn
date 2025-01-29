@@ -1,24 +1,14 @@
-import MediaListPreview from "@/components/MediaListPreview";
-import { JSX } from "react";
-import { fetchActor } from "@/lib/fetchData";
-import ActorBanner from "@/components/ActorBanner";
+import { Suspense } from "react";
+import ActorDetails from "@/components/ActorDetails";
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<JSX.Element> {
-
-  const actor = await fetchActor((await params).slug);
-
+export default async function PersonPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   return (
     <main className="flex flex-col gap-8 m-20 p-8">
-      <ActorBanner {...actor} />
-      <MediaListPreview
-        medias={actor.movie_credits.cast}
-        type="movie"
-        title="Connu pour"
-      />
+      {/* Load Actor Details Separately */}
+      <Suspense fallback={<div>Loading actor details...</div>}>
+        <ActorDetails slug={slug} />
+      </Suspense>
     </main>
   );
 }
