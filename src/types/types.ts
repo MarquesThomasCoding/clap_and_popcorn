@@ -18,8 +18,8 @@ export interface Movie {
     videos: { results: TeaserVideo[] };
     recommendations: { results: Movie[] };
     credits: {
-        cast: Person[];
-        crew: Person[];
+        cast: Crew[];
+        crew: Crew[];
     };
     production_companies: Company[];
 }
@@ -42,8 +42,8 @@ export interface Serie {
     videos: { results: TeaserVideo[] };
     recommendations: { results: Serie[] };
     credits: {
-        cast: Person[];
-        crew: Person[];
+        cast: Crew[];
+        crew: Crew[];
     };
     production_companies: Company[];
 }
