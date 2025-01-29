@@ -31,12 +31,10 @@ export default function MediaListPreview({
       </div>
       <div className="overflow-x-auto">
         <div
-          className={`grid gap-4`}
-          style={
-            !grid
-              ? { gridTemplateColumns: `repeat(${medias.length}, 200px)` }
-              : { gridTemplateColumns: `repeat(auto-fill, minmax(200px, 1fr))` }
-          }
+          className={`grid gap-4 ${
+            grid ? "grid-cols-[repeat(auto-fill,_minmax(100px,_1fr))]" : "grid-cols-[repeat(var(--cols),_minmax(200px,_1fr))]"
+          }`}
+          style={{ "--cols": medias.length } as React.CSSProperties}
         >
           {medias.slice(0, 100).map((media: Movie | Serie) => (
             <MediaPreview media={media} type={type} key={media.id} />

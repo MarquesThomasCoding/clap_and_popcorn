@@ -75,7 +75,7 @@ export default function Page(): JSX.Element {
           <MediaBanner media={trendingMovies[0]} type="movie" />
         )
       )}
-      <section className="ml-20 flex flex-col gap-16">
+      <section className="ml-5 lg:ml-20 flex flex-col gap-16">
         {loadingPopular ? (
           <LoadingMediaList />
         ) : (

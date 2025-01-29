@@ -76,15 +76,15 @@ export default function MediaBanner({
       }}
     >
       <div
-        className={`absolute inset-0 flex flex-col justify-end gap-8 p-8 ${
+        className={`absolute inset-0 flex flex-col justify-end gap-2 lg:gap-8 p-8 ${
           isMediaPage ? "" : "pb-40"
         }`}
         style={{ background: "linear-gradient(360deg, black, transparent)" }}
       >
-        <h2 className="text-6xl font-bold mx-20 mb-2">
+        <h2 className="text-3xl lg:text-6xl font-bold lg:mx-20 mb-2">
           {type === "movie" ? (media as Movie).title : (media as Serie).name}
         </h2>
-        <p className="mx-20 text-lg max-w-96">
+        <p className="lg:mx-20 lg:text-lg max-w-96">
           {media.overview.slice(0, 300)}...
           <button
             onClick={() => handleShowOverview()}
@@ -93,12 +93,12 @@ export default function MediaBanner({
             Voir plus
           </button>
         </p>
-        <div className="flex gap-4 mx-20">
+        <div className="flex flex-col lg:flex-row gap-4 lg:mx-20">
           {isMediaPage && (
             <button
               onClick={() => handleShowTeaser()}
               className={
-                "flex items-center gap-2 rounded-lg px-8 py-3 bg-[#F7CC23] text-black"
+                "w-fit flex items-center gap-2 rounded-lg px-3 lg:px-8 py-3 bg-[#F7CC23] text-black"
               }
             >
               <Play />
@@ -111,7 +111,7 @@ export default function MediaBanner({
                 type === "movie" ? "movies/" + media.id : "tv/" + media.id
               }`}
               className={
-                "flex items-center gap-2 rounded-lg px-8 py-3 bg-white bg-opacity-30 backdrop-blur-sm"
+                "w-fit flex items-center gap-2 rounded-lg px-3 lg:px-8 py-3 bg-white bg-opacity-30 backdrop-blur-sm"
               }
             >
               <Info />
@@ -122,7 +122,7 @@ export default function MediaBanner({
             <button
               onClick={() => handleAddToSeeMedia()}
               className={
-                "flex items-center gap-2 rounded-lg px-8 py-3 bg-white bg-opacity-30 backdrop-blur-sm"
+                "w-fit flex items-center gap-2 rounded-lg px-3 lg:px-8 py-3 bg-white bg-opacity-30 backdrop-blur-sm"
               }
             >
               <Eye />
@@ -132,7 +132,7 @@ export default function MediaBanner({
         </div>
         {isMediaPage && (
           <>
-            <div className="flex gap-2 mx-20">
+            <div className="flex flex-wrap gap-2 lg:mx-20">
               {media.genres.map((genre: { id: number; name: string }) => (
                 <span
                   key={genre.id}
@@ -148,7 +148,7 @@ export default function MediaBanner({
                 </span>
               )}
             </div>
-            <div className="flex gap-2 mx-20">
+            <div className="flex gap-2 lg:mx-20">
               <span className="rounded-sm px-2 bg-black bg-opacity-30 backdrop-blur-sm">
                 {"le " +
                   new Date(
@@ -165,7 +165,7 @@ export default function MediaBanner({
                 <span key={country}>{country}</span>
               ))}
             </div>
-            <div className="flex items-center mx-20">
+            <div className="flex items-center lg:mx-20">
               {Array.from({ length: 5 }, (_, index) => (
                 <svg
                   key={index}
@@ -205,7 +205,7 @@ export default function MediaBanner({
           className="fixed inset-0 bg-black bg-opacity-50 z-10 flex justify-center items-center"
           onClick={() => handleShowOverview()}
         >
-          <span className="flex flex-col gap-2 w-1/2 h-1/2 overflow-y-auto rounded-md bg-zinc-900 p-8">
+          <span className="flex flex-col gap-2 lg:w-1/2 h-1/2 overflow-y-auto rounded-md bg-zinc-900 p-8">
             <h4 className="text-xl font-bold border-b border-zinc-400 p-2">
               Synopsis
             </h4>

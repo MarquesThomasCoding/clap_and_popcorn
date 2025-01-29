@@ -59,7 +59,7 @@ export default function Home() {
       ) : (
         topRatedSeries.length > 0 && <MediaBanner media={topRatedSeries[0]} type="serie" />
       )}
-      <section className="ml-20 flex flex-col gap-16">
+      <section className="m-5 lg:ml-20 flex flex-col gap-16">
         {loadingTopRated ? (
             <LoadingMediaList />
         ) : (

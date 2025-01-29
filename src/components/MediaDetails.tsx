@@ -25,7 +25,7 @@ export default async function MediaDetails({
       {/* Movie banner loads first */}
       <MediaBanner media={mediaData} type={type} isMediaPage />
 
-      <section className="mx-20 p-8">
+      <section className="flex flex-col gap-8 lg:mx-20 p-8">
         {/* Buttons */}
         <SeeAndShareButtons media={mediaData} type={type} />
 
@@ -71,25 +71,27 @@ function ProductionCompanies({
   companies: { id: number; name: string; logo_path: string }[];
 }) {
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4 overflow-hidden">
       <h2 className="text-3xl">Produit par</h2>
-      <ul className="flex justify-between">
-        {companies.map((company) => (
-          <li key={company.id}>
-            {company.logo_path ? (
-              <Image
-                src={`https://image.tmdb.org/t/p/w500/${company.logo_path}`}
-                alt={company.name}
-                width={500}
-                height={500}
-                className="w-auto h-10 invert-0 dark:invert"
-              />
-            ) : (
-              <span className="text-center">{company.name}</span>
-            )}
-          </li>
-        ))}
-      </ul>
+      <div className="w-full overflow-auto">
+        <ul className="flex gap-8 w-fit">
+          {companies.map((company) => (
+            <li className="min-w-fit w-fit" key={company.id}>
+              {company.logo_path ? (
+                <Image
+                  src={`https://image.tmdb.org/t/p/w500/${company.logo_path}`}
+                  alt={company.name}
+                  width={500}
+                  height={500}
+                  className="min-w-fit w-auto h-10 invert-0 dark:invert"
+                />
+              ) : (
+                <span className="text-center">{company.name}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 }
@@ -108,11 +110,11 @@ function CrewSection({ crew }: { crew: Crew[] }) {
     }, []);
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4 overflow-hidden">
       <h2 className="text-3xl">Réalisation</h2>
-      <ul className="flex justify-between">
+      <ul className="flex gap-8 overflow-auto">
         {uniqueCrew.map((member) => (
-          <li key={member.id} className="flex flex-col items-center">
+          <li key={member.id} className="flex flex-col items-center min-w-20">
             <span className="text-center">{member.name}</span>
             <span className="text-center">{member.job}</span>
           </li>

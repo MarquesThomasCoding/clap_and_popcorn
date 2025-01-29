@@ -22,6 +22,7 @@ import Image from "next/image";
 import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
 import useAuth from "@/hooks/useAuth";
+import { User2Icon } from "lucide-react";
 
 export const NavBar: React.FC = () => {
   const [isVisible, setIsVisible] = useState<boolean>(true);
@@ -63,7 +64,7 @@ export const NavBar: React.FC = () => {
 
   return (
     <NavigationMenu
-      className={`fixed top-0 left-0 w-full max-w-none justify-between px-20 bg-black bg-opacity-50 backdrop-blur-sm transition-transform duration-300 ${
+      className={`fixed top-0 left-0 w-full max-w-none justify-between lg:px-20 bg-black bg-opacity-50 backdrop-blur-sm transition-transform duration-300 ${
         isVisible ? "transform-none" : "-translate-y-full"
       }`}
     >
@@ -113,7 +114,10 @@ export const NavBar: React.FC = () => {
         <NavigationMenuItem>
           {user ? (
             <DropdownMenu>
-              <DropdownMenuTrigger>{user.displayName}</DropdownMenuTrigger>
+              <DropdownMenuTrigger>
+                <span className="hidden sm:block">{user.displayName}</span>
+                <User2Icon className="block sm:hidden" size={24} />
+              </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
                 <DropdownMenuSeparator />

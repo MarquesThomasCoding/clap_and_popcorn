@@ -68,7 +68,7 @@ export default function SearchBar(): JSX.Element {
 
   return (
     <div>
-      <div className="flex items-center px-4 w-full max-w-96 m-auto rounded-lg border-none bg-zinc-600 bg-opacity-50 backdrop-blur-sm">
+      <div className="flex items-center px-4 w-full max-w-96 h-9 m-auto rounded-lg border-none bg-zinc-600 bg-opacity-50 backdrop-blur-sm">
         <Search
           className="w-6 h-6 text-white"
           onClick={() => displayExtendedSearchBar()}
@@ -77,7 +77,7 @@ export default function SearchBar(): JSX.Element {
           type="text"
           onClick={() => displayExtendedSearchBar()}
           placeholder="Rechercher..."
-          className="bg-transparent text-white border-none"
+          className="bg-transparent text-white border-none hidden md:block"
         />
       </div>
       {showSearchBar && (

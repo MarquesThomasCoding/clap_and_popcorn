@@ -95,7 +95,7 @@ export default function Page(): JSX.Element {
 
   return (
     <div>
-      <section className="m-20 flex flex-col gap-16">
+      <section className="m-5 mt-20 lg:m-20 flex flex-col gap-16">
         <h1 className="flex items-center gap-8 text-5xl">
           Bonjour {newUsername}
           <Dialog>

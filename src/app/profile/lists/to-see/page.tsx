@@ -43,7 +43,7 @@ const ToSeePage = (): JSX.Element => {
   }
 
   return (
-    <section className="m-20 flex flex-col gap-16">
+    <section className="m-5 mt-20 lg:m-20 flex flex-col gap-16">
       <MediaListPreview medias={toSeeMovies} type="movie" title="Mes films à voir" grid />
       <MediaListPreview medias={toSeeSeries} type="serie" title="Mes séries à voir" grid />
     </section>
